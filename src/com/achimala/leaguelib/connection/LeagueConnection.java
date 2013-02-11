@@ -1,11 +1,13 @@
 package com.achimala.leaguelib.connection;
 
 import com.gvaneyck.rtmp.LoLRTMPSClient;
+import com.achimala.leaguelib.services.SummonerService;
 import java.io.IOException;
 
 public class LeagueConnection {
     private LeagueServer _server;
     private LoLRTMPSClient _rtmpClient = null;
+    private SummonerService _summonerService = null;
     
     public LeagueConnection(LeagueServer server) {
         _server = server;
@@ -41,5 +43,17 @@ public class LeagueConnection {
     
     public String toString() {
         return String.format("<LeagueConnection:%s (%s)>", _server.getServerCode(), isConnected() ? "Online" : "Offline");
+    }
+    
+    public LoLRTMPSClient getInternalRTMPClient() {
+        return _rtmpClient;
+    }
+    
+    //// Services
+    
+    public SummonerService getSummonerService() {
+        if(_summonerService == null)
+            _summonerService = new SummonerService(this);
+        return _summonerService;
     }
 }

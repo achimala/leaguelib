@@ -1,11 +1,11 @@
 package com.achimala.leaguelib.connection;
 
 public enum LeagueServer {
-    NorthAmerica("NA"),
-    EuropeWest("EUW"),
-    EuropeNordicAndEast("EUNE"),
-    Brazil("BR"),
-    Korea("KR");
+    NORTH_AMERICA("NA"),
+    EUROPE_WEST("EUW"),
+    EUROPE_NORDIC_AND_EAST("EUNE"),
+    BRAZIL("BR"),
+    KOREA("KR");
     // Garena servers...
     // PublicBetaEnvironment
     
