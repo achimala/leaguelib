@@ -30,7 +30,15 @@
             </classpath>
         </java>
     </target>
+    
+    <target name="run-test-console" depends="jar">
+        <java classname="${package-prefix}.tests.TestConsole">
+            <classpath>
+                <pathelement location="${jar.dir}/${ant.project.name}.jar" />
+            </classpath>
+        </java>
+    </target>
 
-    <target name="clean-build" depends="clean,jar" />
+    <target name="clean-build" depends="clean, jar" />
     <target name="test" depends="clean, run-test" />
 </project>
