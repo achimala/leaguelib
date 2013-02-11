@@ -1,25 +1,53 @@
 <project name="leaguelib" basedir="." default="run-test">
     <property name="src.dir" value="src" />
     <property name="build.dir" value="build" />
+    <property name="lib.dir" value="lib" />
     <property name="classes.dir" value="${build.dir}/classes" />
     <property name="jar.dir" value="${build.dir}/jar" />
     <property name="package-prefix" value="com.achimala.leaguelib" />
-
+    
+    <!-- <path id="external.jars">
+        <fileset dir="${lib.dir}" includes="**/*.jar" />
+    </path> -->
+    
+    <path id="project.classpath">
+        <!-- <pathelement location="${src.dir}" /> -->
+        <!-- <path refid="external.jars" /> -->
+        <fileset dir="${lib.dir}">
+            <include name="*.jar" />
+        </fileset>
+    </path>
+    
+    <pathconvert property="mf.classpath" pathsep=" ">
+        <path refid="project.classpath" />
+        <mapper>
+            <chainedmapper>
+                <flattenmapper />
+                <globmapper from="*.jar" to="lib/*.jar" />
+            </chainedmapper>
+        </mapper>
+    </pathconvert>
+    
+    <path id="jars">
+        <fileset dir="${lib.dir}" includes="**/*.jar" />
+    </path>
+    
     <target name="clean">
         <delete dir="build" />
     </target>
 
     <target name="compile">
         <mkdir dir="${classes.dir}" />
-        <javac srcdir="src" destdir="${classes.dir}" includeantruntime="false" />
+        <javac srcdir="${src.dir}" destdir="${classes.dir}" includeantruntime="false" classpathref="jars" debug="on" />
     </target>
 
     <target name="jar" depends="compile">
         <mkdir dir="${jar.dir}" />
         <jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}">
-            <manifest>
+            <!-- <manifest>
                 <attribute name="Main-Class" value="${package-prefix}.tests.MainTest" />
-            </manifest>
+            </manifest> -->
+            <zipgroupfileset dir="${lib.dir}" includes="**/*.jar" />
         </jar>
     </target>
 
