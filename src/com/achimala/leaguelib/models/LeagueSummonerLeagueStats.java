@@ -50,14 +50,16 @@ public class LeagueSummonerLeagueStats {
     public LeagueSummonerLeagueStats() {
     }
     
-    public LeagueSummonerLeagueStats(TypedObject obj, int matchingId) throws LeagueException {
+    public LeagueSummonerLeagueStats(TypedObject obj) throws LeagueException {
         obj = obj.getTO("body");
         _queue = LeagueMatchmakingQueue.valueOf(obj.getString("queue"));
         _leagueName = obj.getString("name");
         
+        String requestor = obj.getString("requestorsName");
+        
         TypedObject sumObj = null;
         for(Object o : obj.getArray("entries")) {
-            if(((TypedObject)o).getInt("playerOrTeamId") == matchingId) {
+            if(((TypedObject)o).getString("playerOrTeamName").equalsIgnoreCase(requestor)) {
                 sumObj = (TypedObject)o;
                 break;
             }

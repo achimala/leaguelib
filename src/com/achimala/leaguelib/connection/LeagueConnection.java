@@ -1,14 +1,15 @@
 package com.achimala.leaguelib.connection;
 
 import com.gvaneyck.rtmp.LoLRTMPSClient;
-import com.achimala.leaguelib.services.SummonerService;
+import com.achimala.leaguelib.services.*;
 import com.achimala.leaguelib.errors.*;
 import java.io.IOException;
 
 public class LeagueConnection {
-    private LeagueServer _server;
-    private LoLRTMPSClient _rtmpClient = null;
-    private SummonerService _summonerService = null;
+    private LeagueServer _server=null;
+    private LoLRTMPSClient _rtmpClient=null;
+    private SummonerService _summonerService=null;
+    private LeaguesService _leaguesService=null;
     
     public LeagueConnection(LeagueServer server) {
         _server = server;
@@ -56,5 +57,11 @@ public class LeagueConnection {
         if(_summonerService == null)
             _summonerService = new SummonerService(this);
         return _summonerService;
+    }
+    
+    public LeaguesService getLeaguesService() {
+        if(_leaguesService == null)
+            _leaguesService = new LeaguesService(this);
+        return _leaguesService;
     }
 }

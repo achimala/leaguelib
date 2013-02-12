@@ -14,8 +14,10 @@ public abstract class LeagueAbstractService {
     }
     
     private TypedObject handleResult(TypedObject result) throws LeagueException {
-        if(result.get("result").equals("_error"))
+        if(result.get("result").equals("_error")) {
+            System.err.println(result);
             throw new LeagueException(LeagueErrorCode.RTMP_ERROR, _connection.getInternalRTMPClient().getErrorMessage(result));
+        }
         return result.getTO("data");
     }
     
