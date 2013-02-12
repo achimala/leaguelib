@@ -4,6 +4,7 @@ import com.gvaneyck.rtmp.TypedObject;
 
 public class LeagueSummoner {
     private int _id=-1, _accountId=-1;
+    private int _profileIconId=0, _level=0;
     private String _name=null, _internalName=null;
     
     public LeagueSummoner() {
@@ -22,6 +23,8 @@ public class LeagueSummoner {
         _accountId = obj.getInt("acctId");
         _name = obj.getString("name");
         _internalName = obj.getString("internalName");
+        _profileIconId = obj.getInt("profileIconId")
+        _level = obj.getInt("summonerLevel");
     }
     
     public void setId(int id) {
@@ -40,6 +43,14 @@ public class LeagueSummoner {
         _internalName = name;
     }
     
+    public void setProfileIconId(int id) {
+        _profileIconId = id;
+    }
+    
+    public void setLevel(int level) {
+        _level = level;
+    }
+    
     public int getId() {
         return _id;
     }
@@ -54,5 +65,13 @@ public class LeagueSummoner {
     
     public String getInternalName() {
         return _internalName;
+    }
+    
+    public int getProfileIconId() {
+        return _profileIconId;
+    }
+    
+    public int getLevel() {
+        return _level;
     }
 }
