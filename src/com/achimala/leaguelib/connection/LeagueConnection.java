@@ -2,6 +2,7 @@ package com.achimala.leaguelib.connection;
 
 import com.gvaneyck.rtmp.LoLRTMPSClient;
 import com.achimala.leaguelib.services.SummonerService;
+import com.achimala.leaguelib.errors.*;
 import java.io.IOException;
 
 public class LeagueConnection {
@@ -21,9 +22,9 @@ public class LeagueConnection {
         _rtmpClient = new LoLRTMPSClient(_server.getServerCode(), clientVersion, username, password);
     }
     
-    public void connect() throws LeagueConnectionException {
+    public void connect() throws LeagueException {
         if(_rtmpClient == null)
-            throw new LeagueConnectionException("Missing authentication credentials for connection to server " + _server);
+            throw new LeagueException(LeagueErrorCode.AUTHENTICATION_ERROR, "Missing authentication credentials for connection to server " + _server);
         try {
             if(_rtmpClient.isConnected()) {
                 if(_rtmpClient.isLoggedIn())
@@ -33,7 +34,7 @@ public class LeagueConnection {
             } else
                 _rtmpClient.connectAndLogin();
         } catch(IOException ex) {
-            throw new LeagueConnectionException(ex.getMessage());
+            throw new LeagueException(LeagueErrorCode.NETWORK_ERROR, ex.getMessage());
         }
     }
     

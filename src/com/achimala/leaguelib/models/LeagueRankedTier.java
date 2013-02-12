@@ -9,11 +9,3 @@ public enum LeagueRankedTier {
     DIAMOND,
     CHALLENGER,
 }
-
-public enum LeagueRankedRank {
-    I,
-    II,
-    III,
-    IV,
-    V,
-}

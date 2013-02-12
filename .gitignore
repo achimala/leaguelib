@@ -6,3 +6,4 @@ build/
 headerstuff.txt
 rawmessages
 *.MF
+test-console.sh

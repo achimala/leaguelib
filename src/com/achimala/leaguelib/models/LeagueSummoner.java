@@ -6,24 +6,27 @@ public class LeagueSummoner {
     private int _id=-1, _accountId=-1;
     private int _profileIconId=0, _level=0;
     private String _name=null, _internalName=null;
+    LeagueSummonerRankedStats _rankedStats=null;
+    LeagueSummonerLeagueStats _leagueStats=null;
     
     public LeagueSummoner() {
+        _rankedStats = new LeagueSummonerRankedStats();
     }
     
     public LeagueSummoner(int id, String name) {
+        this();
         _id = id;
         _name = name;
-        _accountId = -1;
-        _internalName = null;
     }
     
     public LeagueSummoner(TypedObject obj) {
+        this();
         obj = obj.getTO("body");
         _id = obj.getInt("summonerId");
         _accountId = obj.getInt("acctId");
         _name = obj.getString("name");
         _internalName = obj.getString("internalName");
-        _profileIconId = obj.getInt("profileIconId")
+        _profileIconId = obj.getInt("profileIconId");
         _level = obj.getInt("summonerLevel");
     }
     
@@ -51,6 +54,14 @@ public class LeagueSummoner {
         _level = level;
     }
     
+    public void setRankedStats(LeagueSummonerRankedStats stats) {
+        _rankedStats = stats;
+    }
+    
+    public void setLeagueStats(LeagueSummonerLeagueStats stats) {
+        _leagueStats = stats;
+    }
+    
     public int getId() {
         return _id;
     }
@@ -73,5 +84,13 @@ public class LeagueSummoner {
     
     public int getLevel() {
         return _level;
+    }
+    
+    public LeagueSummonerRankedStats getRankedStats() {
+        return _rankedStats;
+    }
+    
+    public LeagueSummonerLeagueStats getLeagueStats() {
+        return _leagueStats;
     }
 }

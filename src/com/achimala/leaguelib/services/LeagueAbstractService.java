@@ -2,6 +2,7 @@ package com.achimala.leaguelib.services;
 
 import com.gvaneyck.rtmp.TypedObject;
 import com.achimala.leaguelib.connection.*;
+import com.achimala.leaguelib.errors.*;
 import com.achimala.util.Callback;
 import java.io.IOException;
 
@@ -12,19 +13,19 @@ public abstract class LeagueAbstractService {
         _connection = connection;
     }
     
-    private TypedObject handleResult(TypedObject result) throws LeagueServiceException {
+    private TypedObject handleResult(TypedObject result) throws LeagueException {
         if(result.get("result").equals("_error"))
-            throw new LeagueServiceException(_connection.getInternalRTMPClient().getErrorMessage(result));
+            throw new LeagueException(LeagueErrorCode.RTMP_ERROR, _connection.getInternalRTMPClient().getErrorMessage(result));
         return result.getTO("data");
     }
     
-    protected TypedObject call(String method, Object arguments) throws LeagueServiceException {
+    protected TypedObject call(String method, Object arguments) throws LeagueException {
         try {
             int id = _connection.getInternalRTMPClient().invoke(getServiceName(), method, arguments);
             TypedObject result = _connection.getInternalRTMPClient().getResult(id);
             return handleResult(result);
         } catch(IOException ex) {
-            throw new LeagueServiceException(ex.getMessage());
+            throw new LeagueException(LeagueErrorCode.NETWORK_ERROR, ex.getMessage());
         }
     }
     
@@ -34,7 +35,7 @@ public abstract class LeagueAbstractService {
                 public void callback(TypedObject result) {
                     try {
                         callback.onCompletion(handleResult(result));
-                    } catch(LeagueServiceException ex) {
+                    } catch(LeagueException ex) {
                         callback.onError(ex);
                     }
                 }
