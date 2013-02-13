@@ -31,6 +31,7 @@ public class GameService extends LeagueAbstractService {
         return "gameService";
     }
     
+    // FIXME: Not sure if this is the right way to handle this
     protected TypedObject handleResult(TypedObject result) throws LeagueException {
         if(result.get("result").equals("_error")) {
             String reason = result.getExceptionMessage();

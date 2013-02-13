@@ -54,7 +54,7 @@ public class MainTest {
         c.connect();
         
         incrementCount();
-        c.getSummonerService().getSummonerByName("haraheta", new Callback<LeagueSummoner>() {
+        c.getSummonerService().getSummonerByName("nawjttricka", new Callback<LeagueSummoner>() {
             public void onCompletion(LeagueSummoner summoner) {
                 lock.lock();
                 
@@ -90,12 +90,16 @@ public class MainTest {
                     public void onCompletion(LeagueSummoner summoner) {
                         lock.lock();
                         LeagueSummonerLeagueStats stats = summoner.getLeagueStats();
-                        System.out.println("League:");
-                        System.out.println("    Name: " + stats.getLeagueName());
-                        System.out.println("    Tier: " + stats.getTier());
-                        System.out.println("    Rank: " + stats.getRank());
-                        System.out.println("    Wins: " + stats.getWins());
-                        System.out.println("    ~Elo: " + stats.getApproximateElo());
+                        if(stats != null) {
+                            System.out.println("League:");
+                            System.out.println("    Name: " + stats.getLeagueName());
+                            System.out.println("    Tier: " + stats.getTier());
+                            System.out.println("    Rank: " + stats.getRank());
+                            System.out.println("    Wins: " + stats.getWins());
+                            System.out.println("    ~Elo: " + stats.getApproximateElo());
+                        } else {
+                            System.out.println("NOT IN LEAGUE");
+                        }
                         System.out.println();
                         System.out.flush();
                         decrementCount();
