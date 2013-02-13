@@ -7,9 +7,12 @@ import java.io.IOException;
 
 public class LeagueConnection {
     private LeagueServer _server=null;
+    // In the future, this should be a client queue rather than a single client:
     private LoLRTMPSClient _rtmpClient=null;
     private SummonerService _summonerService=null;
     private LeaguesService _leaguesService=null;
+    private PlayerStatsService _playerStatsService=null;
+    private GameService _gameService=null;
     
     public LeagueConnection(LeagueServer server) {
         _server = server;
@@ -48,6 +51,7 @@ public class LeagueConnection {
     }
     
     public LoLRTMPSClient getInternalRTMPClient() {
+        // This should eventually return a client off of the queue
         return _rtmpClient;
     }
     
@@ -63,5 +67,17 @@ public class LeagueConnection {
         if(_leaguesService == null)
             _leaguesService = new LeaguesService(this);
         return _leaguesService;
+    }
+    
+    public PlayerStatsService getPlayerStatsService() {
+        if(_playerStatsService == null)
+            _playerStatsService = new PlayerStatsService(this);
+        return _playerStatsService;
+    }
+    
+    public GameService getGameService() {
+        if(_gameService == null)
+            _gameService = new GameService(this);
+        return _gameService;
     }
 }

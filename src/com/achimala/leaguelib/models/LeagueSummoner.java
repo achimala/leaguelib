@@ -6,11 +6,12 @@ public class LeagueSummoner {
     private int _id=-1, _accountId=-1;
     private int _profileIconId=0, _level=0;
     private String _name=null, _internalName=null;
-    LeagueSummonerRankedStats _rankedStats=null;
+    LeagueSummonerProfileInfo _profileInfo=null;
     LeagueSummonerLeagueStats _leagueStats=null;
+    LeagueSummonerRankedStats _rankedStats=null;
     
     public LeagueSummoner() {
-        _rankedStats = new LeagueSummonerRankedStats();
+        _profileInfo = new LeagueSummonerProfileInfo();
     }
     
     public LeagueSummoner(int id, String name) {
@@ -54,12 +55,16 @@ public class LeagueSummoner {
         _level = level;
     }
     
-    public void setRankedStats(LeagueSummonerRankedStats stats) {
-        _rankedStats = stats;
+    public void setProfileInfo(LeagueSummonerProfileInfo info) {
+        _profileInfo = info;
     }
     
     public void setLeagueStats(LeagueSummonerLeagueStats stats) {
         _leagueStats = stats;
+    }
+    
+    public void setRankedStats(LeagueSummonerRankedStats stats) {
+        _rankedStats = stats;
     }
     
     public int getId() {
@@ -86,11 +91,15 @@ public class LeagueSummoner {
         return _level;
     }
     
-    public LeagueSummonerRankedStats getRankedStats() {
-        return _rankedStats;
+    public LeagueSummonerProfileInfo getProfileInfo() {
+        return _profileInfo;
     }
     
     public LeagueSummonerLeagueStats getLeagueStats() {
         return _leagueStats;
+    }
+    
+    public LeagueSummonerRankedStats getRankedStats() {
+        return _rankedStats;
     }
 }

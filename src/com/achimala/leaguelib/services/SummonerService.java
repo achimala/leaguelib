@@ -33,13 +33,13 @@ public class SummonerService extends LeagueAbstractService {
     
     public void fillPublicSummonerData(LeagueSummoner summoner) throws LeagueException {
         TypedObject obj = call("getAllPublicSummonerDataByAccount", new Object[] { summoner.getAccountId() });
-        summoner.setRankedStats(new LeagueSummonerRankedStats(obj));
+        summoner.setProfileInfo(new LeagueSummonerProfileInfo(obj));
     }
     
     public void fillPublicSummonerData(final LeagueSummoner summoner, final Callback<LeagueSummoner> callback) {
         callAsynchronously("getAllPublicSummonerDataByAccount", new Object[] { summoner.getAccountId() }, new Callback<TypedObject>() {
             public void onCompletion(TypedObject obj) {
-                summoner.setRankedStats(new LeagueSummonerRankedStats(obj));
+                summoner.setProfileInfo(new LeagueSummonerProfileInfo(obj));
                 callback.onCompletion(summoner);
             }
             public void onError(Exception ex) {

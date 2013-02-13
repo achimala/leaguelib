@@ -1,33 +1,40 @@
 package com.achimala.leaguelib.models;
 
 import com.gvaneyck.rtmp.TypedObject;
+import java.util.HashMap;
+import java.util.Map;
 
 public class LeagueSummonerRankedStats {
-    private LeagueRankedTier _seasonOneTier=null, _seasonTwoTier=null;
-    // TODO: Runes and masteries...
+    private HashMap<Integer, Map<LeagueRankedStatType, Integer>> _stats;
     
     public LeagueSummonerRankedStats() {
     }
     
     public LeagueSummonerRankedStats(TypedObject obj) {
-        obj = obj.getTO("body").getTO("summoner");
-        _seasonOneTier = LeagueRankedTier.valueOf(obj.getString("seasonOneTier"));
-        _seasonTwoTier = LeagueRankedTier.valueOf(obj.getString("seasonTwoTier"));
+        _stats = new HashMap<Integer, Map<LeagueRankedStatType, Integer>>();
+        for(Object o : obj.getTO("body").getArray("lifetimeStatistics")) {
+            TypedObject to = (TypedObject)o;
+            int champId = to.getInt("championId");
+            LeagueRankedStatType type = LeagueRankedStatType.valueOf(to.getString("statType"));
+            if(!_stats.containsKey(champId))
+                _stats.put(champId, new HashMap<LeagueRankedStatType, Integer>());
+            _stats.get(champId).put(type, to.getInt("value"));
+        }
     }
     
-    public void setSeasonOneTier(LeagueRankedTier tier) {
-        _seasonOneTier = tier;
+    public Map<LeagueRankedStatType, Integer> getAllStatsForChampion(LeagueChampion champion) {
+        return _stats.get(champion.getId());
     }
     
-    public void setSeasonTwoTier(LeagueRankedTier tier) {
-        _seasonTwoTier = tier;
+    public Map<LeagueRankedStatType, Integer> getAllPlayerStats() {
+        return _stats.get(0);
     }
     
-    public LeagueRankedTier getSeasonOneTier() {
-        return _seasonOneTier;
+    public int getStatForChampion(LeagueChampion champion, LeagueRankedStatType statType) {
+        return _stats.get(champion.getId()).get(statType);
     }
     
-    public LeagueRankedTier getSeasonTwoTier() {
-        return _seasonTwoTier;
+    public int getPlayerStat(LeagueRankedStatType statType) {
+        return _stats.get(0).get(statType);
     }
 }

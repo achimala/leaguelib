@@ -3,28 +3,28 @@ package com.achimala.leaguelib.tests;
 import com.achimala.leaguelib.connection.*;
 import com.achimala.leaguelib.models.*;
 import com.achimala.util.Callback;
+import java.util.Map;
 
 public class MainTest {
     public static void main(String[] args) throws Exception {
         final LeagueConnection c = new LeagueConnection(LeagueServer.NORTH_AMERICA);
-        c.setCredentials("anshuchimala2", "", "3.01.asdf");
+        c.setCredentials("anshuchimala2", "dogmeat1", "3.01.asdf");
         c.connect();
-        // LeagueSummoner ladieslover = c.getSummonerService().getSummonerByName("ladieslover");
-        // System.out.println("ladieslover's");
-        // System.out.println("   accountID: " + ladieslover.getAccountId());
-        // System.out.println("  summonerID: " + ladieslover.getId());
-        c.getSummonerService().getSummonerByName("ladieslover", new Callback<LeagueSummoner>() {
-            public void onCompletion(LeagueSummoner ladieslover) {
-                System.out.println("ladieslover's");
-                System.out.println("   accountID: " + ladieslover.getAccountId());
-                System.out.println("  summonerID: " + ladieslover.getId());
+        
+        c.getSummonerService().getSummonerByName("GavinVS", new Callback<LeagueSummoner>() {
+            public void onCompletion(LeagueSummoner summoner) {
+                System.out.println(summoner.getName() + ":");
+                System.out.println("    accountID:  " + summoner.getAccountId());
+                System.out.println("    summonerID: " + summoner.getId());
                 
-                System.out.println("Getting all public data...");
-                c.getSummonerService().fillPublicSummonerData(ladieslover, new Callback<LeagueSummoner>() {
-                    public void onCompletion(LeagueSummoner ladieslover) {
-                        System.out.println("Public data:");
-                        System.out.println("S1: " + ladieslover.getRankedStats().getSeasonOneTier());
-                        System.out.println("S2: " + ladieslover.getRankedStats().getSeasonTwoTier());
+                System.out.println("Getting profile data...");
+                c.getSummonerService().fillPublicSummonerData(summoner, new Callback<LeagueSummoner>() {
+                    public void onCompletion(LeagueSummoner summoner) {
+                        System.out.println("Profile:");
+                        System.out.println("    S1: " + summoner.getProfileInfo().getSeasonOneTier());
+                        System.out.println("    S2: " + summoner.getProfileInfo().getSeasonTwoTier());
+                        System.out.println();
+                        System.out.flush();
                     }
                     
                     public void onError(Exception ex) {
@@ -33,13 +33,33 @@ public class MainTest {
                 });
                 
                 System.out.println("Getting leagues data...");
-                c.getLeaguesService().fillSoloQueueLeagueData(ladieslover, new Callback<LeagueSummoner>() {
-                    public void onCompletion(LeagueSummoner ladieslover) {
-                        LeagueSummonerLeagueStats stats = ladieslover.getLeagueStats();
-                        System.out.println("League Name: " + stats.getLeagueName());
-                        System.out.println("League Tier: " + stats.getTier());
-                        System.out.println("League Rank: " + stats.getRank());
-                        System.out.println("League Wins: " + stats.getWins());
+                c.getLeaguesService().fillSoloQueueLeagueData(summoner, new Callback<LeagueSummoner>() {
+                    public void onCompletion(LeagueSummoner summoner) {
+                        LeagueSummonerLeagueStats stats = summoner.getLeagueStats();
+                        System.out.println("League:");
+                        System.out.println("    Name: " + stats.getLeagueName());
+                        System.out.println("    Tier: " + stats.getTier());
+                        System.out.println("    Rank: " + stats.getRank());
+                        System.out.println("    Wins: " + stats.getWins());
+                        System.out.println();
+                        System.out.flush();
+                    }
+                    
+                    public void onError(Exception ex) {
+                        System.out.println(ex.getMessage());
+                    }
+                });
+                
+                System.out.println("Getting champ data...");
+                c.getPlayerStatsService().fillRankedStats(summoner, new Callback<LeagueSummoner>() {
+                    public void onCompletion(LeagueSummoner summoner) {
+                        LeagueChampion champ = LeagueChampion.getChampionWithName("Anivia");
+                        Map<LeagueRankedStatType, Integer> stats = summoner.getRankedStats().getAllStatsForChampion(champ);
+                        System.out.println("All stats for " + champ + ":");
+                        for(LeagueRankedStatType type : LeagueRankedStatType.values())
+                            System.out.println("    " + type + " = " + stats.get(type));
+                        System.out.println();
+                        System.out.flush();
                     }
                     
                     public void onError(Exception ex) {
@@ -53,5 +73,6 @@ public class MainTest {
         });
         System.out.println("Out here, waiting for it to finish");
         c.getInternalRTMPClient().join();
+        System.out.println("Client joined, terminating");
     }
 }
