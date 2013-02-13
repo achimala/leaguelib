@@ -31,5 +31,30 @@ public class GameService extends LeagueAbstractService {
         return "gameService";
     }
     
+    private void createAndSetGame(LeagueSummoner summoner, TypedObject obj) {
+        LeagueGame game = new LeagueGame(obj.getTO("body"));
+        if(game.getSecondTeam().contains(summoner))
+            game.swapTeams();
+        summoner.setActiveGame(game);
+    }
+    
+    public void fillActiveGameData(LeagueSummoner summoner) throws LeagueException {
+        TypedObject obj = call("retrieveInProgressSpectatorGameInfo", new Object[] { summoner.getInternalName() });
+        createAndSetGame(summoner, obj);
+    }
+    
+    public void fillActiveGameData(final LeagueSummoner summoner, final Callback<LeagueSummoner> callback) {
+        callAsynchronously("retrieveInProgressSpectatorGameInfo", new Object[] { summoner.getInternalName() }, new Callback<TypedObject>() {
+            public void onCompletion(TypedObject obj) {
+                createAndSetGame(summoner, obj);
+                callback.onCompletion(summoner);
+            }
+            
+            public void onError(Exception ex) {
+                callback.onError(ex);
+            }
+        });
+    }
+    
     // retrieveInProgressSpectatorGameInfo -> real time game info
 }

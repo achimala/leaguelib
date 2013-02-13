@@ -25,6 +25,7 @@ public class LeagueSummoner {
     LeagueSummonerProfileInfo _profileInfo=null;
     LeagueSummonerLeagueStats _leagueStats=null;
     LeagueSummonerRankedStats _rankedStats=null;
+    LeagueGame _activeGame=null;
     
     public LeagueSummoner() {
         _profileInfo = new LeagueSummonerProfileInfo();
@@ -37,14 +38,21 @@ public class LeagueSummoner {
     }
     
     public LeagueSummoner(TypedObject obj) {
+        this(obj, false);
+    }
+    
+    // The isGamePlayer flag exists because Riot uses the key accountId when the summoner is in a Game DTO
+    // (when it's returned from gameService.retrieveInProgressSpectatorGameInfo)
+    // But when it's returned via summonerService it's called acctId
+    public LeagueSummoner(TypedObject obj, boolean isGamePlayer) {
         this();
-        obj = obj.getTO("body");
         _id = obj.getInt("summonerId");
-        _accountId = obj.getInt("acctId");
-        _name = obj.getString("name");
-        _internalName = obj.getString("internalName");
+        _accountId = obj.getInt(isGamePlayer ? "accountId" : "acctId");
+        _name = obj.getString(isGamePlayer ? "summonerName" : "name");
+        _internalName = obj.getString(isGamePlayer ? "summonerInternalName" : "internalName");
         _profileIconId = obj.getInt("profileIconId");
-        _level = obj.getInt("summonerLevel");
+        if(!isGamePlayer)
+            _level = obj.getInt("summonerLevel");
     }
     
     public void setId(int id) {
@@ -83,6 +91,10 @@ public class LeagueSummoner {
         _rankedStats = stats;
     }
     
+    public void setActiveGame(LeagueGame game) {
+        _activeGame = game;
+    }
+    
     public int getId() {
         return _id;
     }
@@ -117,5 +129,17 @@ public class LeagueSummoner {
     
     public LeagueSummonerRankedStats getRankedStats() {
         return _rankedStats;
+    }
+    
+    public LeagueGame getActiveGame() {
+        return _activeGame;
+    }
+    
+    public String toString() {
+        return "<Summoner " + _name + " (#" + _id + ")>";
+    }
+    
+    public boolean isEqual(Object other) {
+        return (other instanceof LeagueSummoner && ((LeagueSummoner)other).getId() == _id);
     }
 }

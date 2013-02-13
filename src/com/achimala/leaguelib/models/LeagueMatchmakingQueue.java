@@ -17,8 +17,12 @@
 package com.achimala.leaguelib.models;
 
 public enum LeagueMatchmakingQueue {
-    UNRANKED_5x5,
-    UNRANKED_3x3,
+    BOT,
+    BOT_3x3,
+    NORMAL,
+    NORMAL_3x3,
+    ODIN_UNRANKED,
     RANKED_SOLO_5x5,
+    RANKED_TEAM_3x3,
     RANKED_TEAM_5x5,
 }

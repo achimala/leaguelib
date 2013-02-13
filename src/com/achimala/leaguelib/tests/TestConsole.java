@@ -45,7 +45,7 @@ public class TestConsole {
             String cmd[] = in.readLine().split(" ");
             if(cmd[0].equals("exit") || cmd[0].equals("quit") || cmd[0].equals("q"))
                 break;
-            if(cmd.length < 2) {
+            if(cmd.length < 3) {
                 System.out.println("USAGE: <service> <function> <args...>");
                 continue;
             }

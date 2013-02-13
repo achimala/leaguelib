@@ -33,14 +33,14 @@ public class LeaguesService extends LeagueAbstractService {
     
     public void fillSoloQueueLeagueData(LeagueSummoner summoner) throws LeagueException {
         TypedObject obj = call("getLeagueForPlayer", new Object[] { summoner.getId(), LeagueMatchmakingQueue.RANKED_SOLO_5x5.toString() });
-        summoner.setLeagueStats(new LeagueSummonerLeagueStats(obj));
+        summoner.setLeagueStats(new LeagueSummonerLeagueStats(obj.getTO("body")));
     }
     
     public void fillSoloQueueLeagueData(final LeagueSummoner summoner, final Callback<LeagueSummoner> callback) {
         callAsynchronously("getLeagueForPlayer", new Object[] { summoner.getId(), LeagueMatchmakingQueue.RANKED_SOLO_5x5.toString() }, new Callback<TypedObject>() {
             public void onCompletion(TypedObject obj) {
                 try {
-                    summoner.setLeagueStats(new LeagueSummonerLeagueStats(obj));
+                    summoner.setLeagueStats(new LeagueSummonerLeagueStats(obj.getTO("body")));
                     callback.onCompletion(summoner);
                 } catch(LeagueException ex) {
                     callback.onError(ex);

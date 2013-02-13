@@ -188,7 +188,7 @@ public class LeagueChampion {
     }
     
     public String toString() {
-        return _name + "(#" + _id + ")";
+        return "<Champion " + _name + "(#" + _id + ")>";
     }
     
     // public String getFilename() {

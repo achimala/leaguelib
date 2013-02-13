@@ -57,6 +57,17 @@ public class TypedObject extends HashMap<String, Object>
 		return (TypedObject)get(key);
 	}
 	
+    /**
+     * Extracts the exception reason from an error message
+     * (e.g. com.riotgames.platform.game.GameNotFoundException)
+     */
+    public String getExceptionMessage() {
+        TypedObject cause = getTO("data").getTO("rootCause");
+        if(cause == null)
+            return null;
+        return cause.type;
+    }
+    
 	/**
 	 * Convenience for retrieving Strings
 	 * 

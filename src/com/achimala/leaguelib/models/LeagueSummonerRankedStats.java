@@ -28,7 +28,7 @@ public class LeagueSummonerRankedStats {
     
     public LeagueSummonerRankedStats(TypedObject obj) {
         _stats = new HashMap<Integer, Map<LeagueRankedStatType, Integer>>();
-        for(Object o : obj.getTO("body").getArray("lifetimeStatistics")) {
+        for(Object o : obj.getArray("lifetimeStatistics")) {
             TypedObject to = (TypedObject)o;
             int champId = to.getInt("championId");
             LeagueRankedStatType type = LeagueRankedStatType.valueOf(to.getString("statType"));

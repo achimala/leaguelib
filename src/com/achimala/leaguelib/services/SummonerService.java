@@ -33,13 +33,13 @@ public class SummonerService extends LeagueAbstractService {
     
     public LeagueSummoner getSummonerByName(String name) throws LeagueException {
         TypedObject obj = call("getSummonerByName", new Object[] { name });
-        return new LeagueSummoner(obj);
+        return new LeagueSummoner(obj.getTO("body"));
     }
     
     public void getSummonerByName(String name, final Callback<LeagueSummoner> callback) {
         callAsynchronously("getSummonerByName", new Object[] { name }, new Callback<TypedObject>() {
             public void onCompletion(TypedObject obj) {
-                callback.onCompletion(new LeagueSummoner(obj));
+                callback.onCompletion(new LeagueSummoner(obj.getTO("body")));
             }
             public void onError(Exception ex) {
                 callback.onError(ex);
@@ -49,13 +49,13 @@ public class SummonerService extends LeagueAbstractService {
     
     public void fillPublicSummonerData(LeagueSummoner summoner) throws LeagueException {
         TypedObject obj = call("getAllPublicSummonerDataByAccount", new Object[] { summoner.getAccountId() });
-        summoner.setProfileInfo(new LeagueSummonerProfileInfo(obj));
+        summoner.setProfileInfo(new LeagueSummonerProfileInfo(obj.getTO("body").getTO("summoner")));
     }
     
     public void fillPublicSummonerData(final LeagueSummoner summoner, final Callback<LeagueSummoner> callback) {
         callAsynchronously("getAllPublicSummonerDataByAccount", new Object[] { summoner.getAccountId() }, new Callback<TypedObject>() {
             public void onCompletion(TypedObject obj) {
-                summoner.setProfileInfo(new LeagueSummonerProfileInfo(obj));
+                summoner.setProfileInfo(new LeagueSummonerProfileInfo(obj.getTO("body").getTO("summoner")));
                 callback.onCompletion(summoner);
             }
             public void onError(Exception ex) {

@@ -67,7 +67,9 @@ public class LeagueSummonerLeagueStats {
     }
     
     public LeagueSummonerLeagueStats(TypedObject obj) throws LeagueException {
-        obj = obj.getTO("body");
+        if(obj == null)
+            throw new LeagueException(LeagueErrorCode.SUMMONER_NOT_IN_LEAGUE);
+        
         _queue = LeagueMatchmakingQueue.valueOf(obj.getString("queue"));
         _leagueName = obj.getString("name");
         

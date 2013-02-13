@@ -26,7 +26,6 @@ public class LeagueSummonerProfileInfo {
     }
     
     public LeagueSummonerProfileInfo(TypedObject obj) {
-        obj = obj.getTO("body").getTO("summoner");
         _seasonOneTier = LeagueRankedTier.valueOf(obj.getString("seasonOneTier"));
         _seasonTwoTier = LeagueRankedTier.valueOf(obj.getString("seasonTwoTier"));
     }
