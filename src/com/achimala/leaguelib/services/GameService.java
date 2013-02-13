@@ -31,7 +31,21 @@ public class GameService extends LeagueAbstractService {
         return "gameService";
     }
     
+    protected TypedObject handleResult(TypedObject result) throws LeagueException {
+        if(result.get("result").equals("_error")) {
+            String reason = result.getExceptionMessage();
+            LeagueErrorCode code = LeagueErrorCode.getErrorCodeForException(reason);
+            if(code == LeagueErrorCode.ACTIVE_GAME_NOT_FOUND)
+                return null;
+        }
+        return super.handleResult(result);
+    }
+    
     private void createAndSetGame(LeagueSummoner summoner, TypedObject obj) {
+        if(obj == null) {
+            summoner.setActiveGame(null);
+            return;
+        }
         LeagueGame game = new LeagueGame(obj.getTO("body"), summoner);
         summoner.setActiveGame(game);
     }

@@ -143,12 +143,16 @@ public class MainTest {
                 c.getGameService().fillActiveGameData(summoner, new Callback<LeagueSummoner>() {
                     public void onCompletion(LeagueSummoner summoner) {
                         lock.lock();
-                        System.out.println("PLAYER TEAM:");
-                        for(LeagueSummoner sum : summoner.getActiveGame().getPlayerTeam())
-                            System.out.println("    " + sum);
-                        System.out.println("ENEMY TEAM:");
-                        for(LeagueSummoner sum : summoner.getActiveGame().getEnemyTeam())
-                            System.out.println("    " + sum);
+                        if(summoner.getActiveGame() != null) {
+                            System.out.println("PLAYER TEAM:");
+                            for(LeagueSummoner sum : summoner.getActiveGame().getPlayerTeam())
+                                System.out.println("    " + sum);
+                            System.out.println("ENEMY TEAM:");
+                            for(LeagueSummoner sum : summoner.getActiveGame().getEnemyTeam())
+                                System.out.println("    " + sum);
+                        } else {
+                            System.out.println("NOT IN GAME");
+                        }
                         System.out.println();
                         System.out.flush();
                         decrementCount();
