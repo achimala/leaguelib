@@ -24,7 +24,7 @@ import java.util.Map;
 public class MainTest {
     public static void main(String[] args) throws Exception {
         final LeagueConnection c = new LeagueConnection(LeagueServer.NORTH_AMERICA);
-        c.setCredentials("anshuchimala2", "dogmeat1", "3.01.asdf");
+        c.setCredentials("anshuchimala2", "", "3.01.asdf");
         c.connect();
         
         c.getSummonerService().getSummonerByName("GavinVS", new Callback<LeagueSummoner>() {
