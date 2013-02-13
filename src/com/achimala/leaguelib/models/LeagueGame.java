@@ -62,7 +62,7 @@ public class LeagueGame {
     private String _gameType=null, _gameMode=null;
     private LeagueMatchmakingQueue _queue = null;
     private int _id=-1;
-    private List<LeagueSummoner> _team1=null, _team2=null;
+    private List<LeagueSummoner> _playerTeam=null, _enemyTeam=null;
     private Map<Integer, LeagueChampion> _playerChampionSelections=null;
     private Map<String, LeagueSummoner> _summoners=null;
     private ObserverCredentials _observerCredentials=null;
@@ -70,27 +70,31 @@ public class LeagueGame {
     public LeagueGame() {
     }
     
-    private void fillListWithPlayers(List<LeagueSummoner> list, Object[] team) {
+    private void fillListWithPlayers(List<LeagueSummoner> list, Object[] team, LeagueSummoner primarySummoner) {
         for(Object o : team) {
             TypedObject to = (TypedObject)o;
             LeagueSummoner sum = new LeagueSummoner(to, true);
+            if(sum.isEqual(primarySummoner))
+                sum = primarySummoner;
             _summoners.put(sum.getInternalName(), sum);
             list.add(sum);
         }
     }
     
-    public LeagueGame(TypedObject obj) {
+    public LeagueGame(TypedObject obj, LeagueSummoner primarySummoner) {
         _observerCredentials = new ObserverCredentials(obj.getTO("playerCredentials"));
         obj = obj.getTO("game");
         _id = obj.getInt("id");
         _gameType = obj.getString("gameType");
         _gameMode = obj.getString("gameMode");
         _queue = LeagueMatchmakingQueue.valueOf(obj.getString("queueTypeName"));
-        _team1 = new ArrayList<LeagueSummoner>();
-        _team2 = new ArrayList<LeagueSummoner>();
+        _playerTeam = new ArrayList<LeagueSummoner>();
+        _enemyTeam = new ArrayList<LeagueSummoner>();
         _summoners = new HashMap<String, LeagueSummoner>();
-        fillListWithPlayers(_team1, obj.getArray("teamOne"));
-        fillListWithPlayers(_team2, obj.getArray("teamTwo"));
+        fillListWithPlayers(_playerTeam, obj.getArray("teamOne"), primarySummoner);
+        fillListWithPlayers(_enemyTeam, obj.getArray("teamTwo"), primarySummoner);
+        if(!_playerTeam.contains(primarySummoner))
+            swapTeams();
         
         _playerChampionSelections = new HashMap<Integer, LeagueChampion>();
         for(Object o : obj.getArray("playerChampionSelections")) {
@@ -117,9 +121,9 @@ public class LeagueGame {
     }
     
     public void swapTeams() {
-        List<LeagueSummoner> temp = _team1;
-        _team1 = _team2;
-        _team2 = temp;
+        List<LeagueSummoner> temp = _playerTeam;
+        _playerTeam = _enemyTeam;
+        _enemyTeam = temp;
     }
     
     public String getGameType() {
@@ -138,12 +142,18 @@ public class LeagueGame {
         return _queue;
     }
     
-    public List<LeagueSummoner> getFirstTeam() {
-        return _team1;
+    public List<LeagueSummoner> getPlayerTeam() {
+        return _playerTeam;
     }
     
-    public List<LeagueSummoner> getSecondTeam() {
-        return _team2;
+    public List<LeagueSummoner> getEnemyTeam() {
+        return _enemyTeam;
+    }
+    
+    public List<LeagueSummoner> getAllPlayers() {
+        List<LeagueSummoner> players = new ArrayList<LeagueSummoner>(_playerTeam);
+        players.addAll(_enemyTeam);
+        return players;
     }
     
     public LeagueChampion getChampionSelectionForSummoner(LeagueSummoner summoner) {

@@ -54,7 +54,7 @@ public class MainTest {
         c.connect();
         
         incrementCount();
-        c.getSummonerService().getSummonerByName("gavinvs", new Callback<LeagueSummoner>() {
+        c.getSummonerService().getSummonerByName("haraheta", new Callback<LeagueSummoner>() {
             public void onCompletion(LeagueSummoner summoner) {
                 lock.lock();
                 
@@ -143,11 +143,11 @@ public class MainTest {
                 c.getGameService().fillActiveGameData(summoner, new Callback<LeagueSummoner>() {
                     public void onCompletion(LeagueSummoner summoner) {
                         lock.lock();
-                        System.out.println("TEAM 1:");
-                        for(LeagueSummoner sum : summoner.getActiveGame().getFirstTeam())
+                        System.out.println("PLAYER TEAM:");
+                        for(LeagueSummoner sum : summoner.getActiveGame().getPlayerTeam())
                             System.out.println("    " + sum);
-                        System.out.println("TEAM 2:");
-                        for(LeagueSummoner sum : summoner.getActiveGame().getSecondTeam())
+                        System.out.println("ENEMY TEAM:");
+                        for(LeagueSummoner sum : summoner.getActiveGame().getEnemyTeam())
                             System.out.println("    " + sum);
                         System.out.println();
                         System.out.flush();

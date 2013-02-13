@@ -32,9 +32,7 @@ public class GameService extends LeagueAbstractService {
     }
     
     private void createAndSetGame(LeagueSummoner summoner, TypedObject obj) {
-        LeagueGame game = new LeagueGame(obj.getTO("body"));
-        if(game.getSecondTeam().contains(summoner))
-            game.swapTeams();
+        LeagueGame game = new LeagueGame(obj.getTO("body"), summoner);
         summoner.setActiveGame(game);
     }
     
