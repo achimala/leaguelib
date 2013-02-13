@@ -75,6 +75,7 @@
             <classpath>
                 <pathelement location="${jar.dir}/${ant.project.name}.jar" />
             </classpath>
+            <arg value="${test.password}" />
         </java>
     </target>
     

@@ -24,10 +24,10 @@ import java.util.Map;
 public class MainTest {
     public static void main(String[] args) throws Exception {
         final LeagueConnection c = new LeagueConnection(LeagueServer.NORTH_AMERICA);
-        c.setCredentials("anshuchimala2", "", "3.01.asdf");
+        c.setCredentials("anshuchimala2", args[0], "3.01.asdf");
         c.connect();
         
-        c.getSummonerService().getSummonerByName("GavinVS", new Callback<LeagueSummoner>() {
+        c.getSummonerService().getSummonerByName("chdmwu", new Callback<LeagueSummoner>() {
             public void onCompletion(LeagueSummoner summoner) {
                 System.out.println(summoner.getName() + ":");
                 System.out.println("    accountID:  " + summoner.getAccountId());
@@ -57,6 +57,7 @@ public class MainTest {
                         System.out.println("    Tier: " + stats.getTier());
                         System.out.println("    Rank: " + stats.getRank());
                         System.out.println("    Wins: " + stats.getWins());
+                        System.out.println("    ~Elo: " + stats.getApproximateElo());
                         System.out.println();
                         System.out.flush();
                     }

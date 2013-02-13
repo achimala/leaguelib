@@ -17,11 +17,22 @@
 package com.achimala.leaguelib.models;
 
 public enum LeagueRankedTier {
-    UNRANKED,
-    BRONZE,
-    SILVER,
-    GOLD,
-    PLATINUM,
-    DIAMOND,
-    CHALLENGER,
+    UNRANKED(0),
+    BRONZE(1),
+    SILVER(2),
+    GOLD(3),
+    PLATINUM(4),
+    DIAMOND(5),
+    CHALLENGER(6);
+    
+    private static final double WEIGHT = 350.;
+    private int _value;
+    
+    private LeagueRankedTier(int value) {
+        _value = value;
+    }
+    
+    public double getApproximateEloContribution() {
+        return _value * WEIGHT;
+    }
 }

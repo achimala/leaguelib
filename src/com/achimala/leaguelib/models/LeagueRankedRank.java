@@ -17,9 +17,20 @@
 package com.achimala.leaguelib.models;
 
 public enum LeagueRankedRank {
-    I,
-    II,
-    III,
-    IV,
-    V,
+    I(4),
+    II(3),
+    III(2),
+    IV(1),
+    V(0);
+    
+    private static final double WEIGHT = 70.;
+    private int _value;
+    
+    private LeagueRankedRank(int value) {
+        _value = value;
+    }
+    
+    public double getApproximateEloContribution() {
+        return _value * WEIGHT;
+    }
 }

@@ -101,6 +101,16 @@ public class LeagueSummonerLeagueStats {
             _miniSeries = new MiniSeries(miniSeriesObj);
     }
     
+    public int getApproximateElo() {
+        double elo = 450;
+        elo += _tier.getApproximateEloContribution();
+        elo += _rank.getApproximateEloContribution();
+        elo += 0.5 * _leaguePoints;
+        if(_miniSeries != null)
+            elo += 20.0 * _miniSeries.getWins()/_miniSeries.getTarget();
+        return (int)elo;
+    }
+    
     public void setMatchmakingQueue(LeagueMatchmakingQueue queue) {
         _queue = queue;
     }
