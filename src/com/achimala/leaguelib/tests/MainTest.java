@@ -51,7 +51,7 @@ public class MainTest {
         
         final LeagueConnection c = new LeagueConnection(LeagueServer.NORTH_AMERICA);
         //c.setCredentials("anshuchimala2", args[0], "3.01.asdf");
-        c.login();
+        c.login(args[0]);
         c.connectAll();
         
         incrementCount();

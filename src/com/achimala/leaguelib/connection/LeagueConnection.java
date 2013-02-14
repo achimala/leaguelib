@@ -25,10 +25,9 @@ import java.io.IOException;
 
 public class LeagueConnection {
     private static final String NA_VERSION = "3.01.something";
-    private static final String SECRET = "g9wvEPh5SQ";
     //holds user,pass,version for each client
     //eventually replace this by reading in list from .config
-    private static final String[][] CLIENT_LIST = {{NA_VERSION, "lolteam0", SECRET}, {NA_VERSION, "lolteam2", SECRET}, {NA_VERSION, "lolteam3", SECRET}};
+    private static final String[][] CLIENT_LIST = {{NA_VERSION, "lolteam0", ""}, {NA_VERSION, "lolteam2", ""}, {NA_VERSION, "lolteam3", ""}};
     private LeagueServer _server=null;
     private LoLRTMPSClient _rtmpClients[] = new LoLRTMPSClient[CLIENT_LIST.length];
     private SummonerService _summonerService=null;
@@ -42,14 +41,14 @@ public class LeagueConnection {
         _server = server;
     }
 
-    public void login() {
+    public void login(String password) {
         for(int i = 0; i < CLIENT_LIST.length; i++) {
             if(_rtmpClients[i] != null) {
                 if(_rtmpClients[i].isConnected())
                     _rtmpClients[i].close();
             }
             //order of arfuments: servercode, version, user, pass
-            _rtmpClients[i] = new LoLRTMPSClient(_server.getServerCode(), CLIENT_LIST[i][0], CLIENT_LIST[i][1], CLIENT_LIST[i][2]);
+            _rtmpClients[i] = new LoLRTMPSClient(_server.getServerCode(), CLIENT_LIST[i][0], CLIENT_LIST[i][1], password);
         }
     }
     
