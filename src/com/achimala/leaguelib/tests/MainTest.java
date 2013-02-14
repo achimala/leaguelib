@@ -50,8 +50,9 @@ public class MainTest {
         lock.lock();
         
         final LeagueConnection c = new LeagueConnection(LeagueServer.NORTH_AMERICA);
-        c.setCredentials("anshuchimala2", args[0], "3.01.asdf");
-        c.connect();
+        //c.setCredentials("anshuchimala2", args[0], "3.01.asdf");
+        c.login();
+        c.connectAll();
         
         incrementCount();
         c.getSummonerService().getSummonerByName("nawjttricka", new Callback<LeagueSummoner>() {

@@ -302,6 +302,13 @@ public class LoLRTMPSClient extends RTMPSClient
 
 		System.out.println("Connected to " + region);
 	}
+
+	/**
+	* Added by Gavin Saldanha
+	*/
+	public String getUser() {
+		return user;
+	}
 	
 	/**
 	 * Closes the connection

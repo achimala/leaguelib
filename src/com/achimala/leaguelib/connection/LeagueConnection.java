@@ -17,59 +17,169 @@
 package com.achimala.leaguelib.connection;
 
 import com.gvaneyck.rtmp.LoLRTMPSClient;
+import com.achimala.util.Callback;
+import com.gvaneyck.rtmp.TypedObject;
 import com.achimala.leaguelib.services.*;
 import com.achimala.leaguelib.errors.*;
 import java.io.IOException;
 
 public class LeagueConnection {
+    private static final String NA_VERSION = "3.01.something";
+    private static final String SECRET = "g9wvEPh5SQ";
+    //holds user,pass,version for each client
+    //eventually replace this by reading in list from .config
+    private static final String[][] CLIENT_LIST = {{NA_VERSION, "lolteam0", SECRET}, {NA_VERSION, "lolteam2", SECRET}, {NA_VERSION, "lolteam3", SECRET}};
     private LeagueServer _server=null;
-    // In the future, this should be a client queue rather than a single client:
-    private LoLRTMPSClient _rtmpClient=null;
+    private LoLRTMPSClient _rtmpClients[] = new LoLRTMPSClient[CLIENT_LIST.length];
     private SummonerService _summonerService=null;
     private LeaguesService _leaguesService=null;
     private PlayerStatsService _playerStatsService=null;
     private GameService _gameService=null;
+    private LeagueException[] _connExceptions = new LeagueException[_rtmpClients.length];
+    private int taskCounter = 0;
     
     public LeagueConnection(LeagueServer server) {
         _server = server;
     }
-    
-    public void setCredentials(String username, String password, String clientVersion) {
-        if(_rtmpClient != null) {
-            if(_rtmpClient.isConnected())
-                _rtmpClient.close();
+
+    public void login() {
+        for(int i = 0; i < CLIENT_LIST.length; i++) {
+            if(_rtmpClients[i] != null) {
+                if(_rtmpClients[i].isConnected())
+                    _rtmpClients[i].close();
+            }
+            //order of arfuments: servercode, version, user, pass
+            _rtmpClients[i] = new LoLRTMPSClient(_server.getServerCode(), CLIENT_LIST[i][0], CLIENT_LIST[i][1], CLIENT_LIST[i][2]);
         }
-        _rtmpClient = new LoLRTMPSClient(_server.getServerCode(), clientVersion, username, password);
     }
     
-    public void connect() throws LeagueException {
-        if(_rtmpClient == null)
+    
+    /*public void setCredentials(String username, String password, String clientVersion) {
+        if(_rtmpClients != null) {
+            if(_rtmpClients.isConnected())
+                _rtmpClients.close();
+        }
+        _rtmpClients = new LoLRTMPSClient(_server.getServerCode(), clientVersion, username, password);
+    }*/
+
+    public void connectAll() {
+        for(int i = 0; i < _rtmpClients.length; i++) {
+            try {
+                connect(_rtmpClients[i]);
+            }
+            catch(LeagueException e) {
+                _connExceptions[i] = e;
+                continue;
+            }
+        }
+    }
+
+    public LeagueException[] getConnectionExceptions() {
+        return _connExceptions;
+    }
+
+    public void connect(LoLRTMPSClient client) throws LeagueException {
+        if(client == null)
             throw new LeagueException(LeagueErrorCode.AUTHENTICATION_ERROR, "Missing authentication credentials for connection to server " + _server);
         try {
-            if(_rtmpClient.isConnected()) {
-                if(_rtmpClient.isLoggedIn())
+            if(client.isConnected()) {
+                if(client.isLoggedIn())
                     return;
                 else
-                    _rtmpClient.login();
+                    client.login();
             } else
-                _rtmpClient.connectAndLogin();
+                client.connectAndLogin();
         } catch(IOException ex) {
             throw new LeagueException(LeagueErrorCode.NETWORK_ERROR, ex.getMessage());
         }
     }
     
-    public boolean isConnected() {
+    /*public void connect() throws LeagueException {
+        if(_rtmpClients == null)
+            throw new LeagueException(LeagueErrorCode.AUTHENTICATION_ERROR, "Missing authentication credentials for connection to server " + _server);
+        try {
+            if(_rtmpClients.isConnected()) {
+                if(_rtmpClients.isLoggedIn())
+                    return;
+                else
+                    _rtmpClients.login();
+            } else
+                _rtmpClients.connectAndLogin();
+        } catch(IOException ex) {
+            throw new LeagueException(LeagueErrorCode.NETWORK_ERROR, ex.getMessage());
+        }
+    }*/
+    
+    /*public boolean isConnected() {
         return (_rtmpClient == null || _rtmpClient.isLoggedIn());
+    }*/
+
+    public boolean isAnyoneConnected() {
+        for(LoLRTMPSClient c : _rtmpClients) {
+            if(isConnected(c))
+                return true;
+        }
+        return false;
+    }
+
+    public boolean isEveryoneConnected() {
+        for(LoLRTMPSClient c : _rtmpClients) {
+            if(!isConnected(c))
+                return false;
+        }
+        return true;
+    }
+
+    //don't like this because requires isntance of lolrtmpsclient from outside class
+    public boolean isConnected(LoLRTMPSClient client) {
+        return (client == null || client.isLoggedIn());
+    }
+
+    public boolean isConnected(int clientIndex) {
+        return isConnected(_rtmpClients[clientIndex]);
     }
     
     public String toString() {
-        return String.format("<LeagueConnection:%s (%s)>", _server.getServerCode(), isConnected() ? "Online" : "Offline");
+        String s = "";
+        for(LoLRTMPSClient c : _rtmpClients)
+            s += String.format("<LeagueConnection:%s (%s)>\n", _server.getServerCode(), isConnected(c) ? "Online" : "Offline");
+        return s;
+    }
+
+    public TypedObject invoke(String service, String method, Object arguments) throws LeagueException {
+        try {
+            LoLRTMPSClient c = getNextClient();
+            System.out.println(c.getUser() + " performing " + method + " in " + service);
+            return c.getResult(c.invoke(service, method, arguments));
+        }
+        catch(IOException e) {
+            throw new LeagueException(LeagueErrorCode.NETWORK_ERROR, e.getMessage());
+        }
+    }
+
+    public void invokeWithCallback(String service, String method, Object arguments, final Callback<TypedObject> callback, com.gvaneyck.rtmp.Callback cb) {
+        try {
+            LoLRTMPSClient c = getNextClient();
+            System.out.println(c.getUser() + " performing " + method + " in " + service);
+            c.invokeWithCallback(service, method, arguments, cb);
+        }
+        catch(IOException e) {
+            callback.onError(e);
+        }
+    }
+
+    private LoLRTMPSClient getNextClient() {
+        return _rtmpClients[taskCounter++ % 3];
     }
     
-    public LoLRTMPSClient getInternalRTMPClient() {
+    /*public LoLRTMPSClient getInternalRTMPSClient(int clientIndex) {
         // This should eventually return a client off of the queue
-        return _rtmpClient;
+        return _rtmpClients[clientIndex];
     }
+
+    public LoLRTMPSClient[] getAllInternalRTMPSClients() {
+        return _rtmpClients;
+    }*/
     
     //// Services
     
