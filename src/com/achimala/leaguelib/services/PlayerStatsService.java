@@ -42,8 +42,12 @@ public class PlayerStatsService extends LeagueAbstractService {
     public void fillRankedStats(final LeagueSummoner summoner, final Callback<LeagueSummoner> callback) {
         callAsynchronously("getAggregatedStats", new Object[] { summoner.getAccountId(), SUMMONERS_RIFT, LeagueCompetitiveSeason.CURRENT.toString() }, new Callback<TypedObject>() {
             public void onCompletion(TypedObject obj) {
-                summoner.setRankedStats(new LeagueSummonerRankedStats(obj.getTO("body")));
-                callback.onCompletion(summoner);
+                try {
+                    summoner.setRankedStats(new LeagueSummonerRankedStats(obj.getTO("body")));
+                    callback.onCompletion(summoner);
+                } catch(Exception ex) {
+                    callback.onError(ex);
+                }
             }
             
             public void onError(Exception ex) {

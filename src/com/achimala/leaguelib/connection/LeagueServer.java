@@ -17,25 +17,37 @@
 package com.achimala.leaguelib.connection;
 
 public enum LeagueServer {
-    NORTH_AMERICA("NA"),
-    EUROPE_WEST("EUW"),
-    EUROPE_NORDIC_AND_EAST("EUNE"),
-    BRAZIL("BR"),
-    KOREA("KR");
+    NORTH_AMERICA("NA", "North America"),
+    EUROPE_WEST("EUW", "Europe West"),
+    EUROPE_NORDIC_AND_EAST("EUNE", "Europe Nordic & East"),
+    BRAZIL("BR", "Brazil"),
+    KOREA("KR", "Korea");
     // Garena servers...
     // PublicBetaEnvironment
     
-    private String _serverCode;
+    private String _serverCode, _publicName;
 
-    private LeagueServer(String serverCode) {
+    private LeagueServer(String serverCode, String publicName) {
         _serverCode = serverCode;
+        _publicName = publicName;
+    }
+    
+    public static LeagueServer findServerByCode(String code) {
+        for(LeagueServer server : LeagueServer.values())
+            if(server.getServerCode().equalsIgnoreCase(code))
+                return server;
+        return null;
     }
     
     public String getServerCode() {
         return _serverCode;
     }
     
+    public String getPublicName() {
+        return _publicName;
+    }
+    
     public String toString() {
-        return "<LeagueServer:" + _serverCode + ">";
+        return "<LeagueServer:" + _publicName + " (" + _serverCode + ")>";
     }
 }

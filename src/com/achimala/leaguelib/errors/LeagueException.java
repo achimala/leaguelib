@@ -18,21 +18,35 @@ package com.achimala.leaguelib.errors;
 
 public class LeagueException extends Exception {
     LeagueErrorCode _errorCode=null;
+    Object _internalData=null;
     
     public LeagueException(LeagueErrorCode code) {
-        this(code, null);
+        this(code, null, null);
     }
     
     public LeagueException(LeagueErrorCode code, String message) {
+        this(code, message, null);
+    }
+    
+    public LeagueException(LeagueErrorCode code, String message, Object internalData) {
         super(message);
         _errorCode = code;
+        _internalData = internalData;
     }
     
     public void setErrorCode(LeagueErrorCode code) {
         _errorCode = code;
     }
     
+    public void setInternalData(Object data) {
+        _internalData = data;
+    }
+    
     public LeagueErrorCode getErrorCode() {
         return _errorCode;
+    }
+    
+    public Object getInternalData() {
+        return _internalData;
     }
 }

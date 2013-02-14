@@ -43,12 +43,12 @@ public class GameService extends LeagueAbstractService {
     }
     
     private void createAndSetGame(LeagueSummoner summoner, TypedObject obj) {
-        if(obj == null) {
+        if(obj == null || obj.getTO("body") == null)
             summoner.setActiveGame(null);
-            return;
+        else {
+            LeagueGame game = new LeagueGame(obj.getTO("body"), summoner);
+            summoner.setActiveGame(game);
         }
-        LeagueGame game = new LeagueGame(obj.getTO("body"), summoner);
-        summoner.setActiveGame(game);
     }
     
     public void fillActiveGameData(LeagueSummoner summoner) throws LeagueException {

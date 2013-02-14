@@ -16,6 +16,8 @@
 
 package com.achimala.util;
 
+import com.achimala.leaguelib.errors.LeagueException;
+
 public interface Callback<T> {
     public void onCompletion(T result);
     public void onError(Exception ex);
