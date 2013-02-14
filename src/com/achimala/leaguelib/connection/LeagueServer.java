@@ -31,6 +31,13 @@ public enum LeagueServer {
         _serverCode = serverCode;
     }
     
+    public static LeagueServer findServerByCode(String code) {
+        for(LeagueServer server : LeagueServer.values())
+            if(server.getServerCode().equalsIgnoreCase(code))
+                return server;
+        return null;
+    }
+    
     public String getServerCode() {
         return _serverCode;
     }

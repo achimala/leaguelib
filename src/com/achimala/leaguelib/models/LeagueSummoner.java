@@ -22,6 +22,7 @@ public class LeagueSummoner {
     private int _id=-1, _accountId=-1;
     private int _profileIconId=0, _level=0;
     private String _name=null, _internalName=null;
+    private boolean _isBot = false;
     LeagueSummonerProfileInfo _profileInfo=null;
     LeagueSummonerLeagueStats _leagueStats=null;
     LeagueSummonerRankedStats _rankedStats=null;
@@ -53,6 +54,8 @@ public class LeagueSummoner {
         _profileIconId = obj.getInt("profileIconId");
         if(!isGamePlayer)
             _level = obj.getInt("summonerLevel");
+        if(isGamePlayer)
+            _isBot = obj.type.equals("com.riotgames.platform.game.BotParticipant");
     }
     
     public void setId(int id) {
@@ -95,6 +98,10 @@ public class LeagueSummoner {
         _activeGame = game;
     }
     
+    public void setIsBot(boolean bot) {
+        _isBot = bot;
+    }
+    
     public int getId() {
         return _id;
     }
@@ -133,6 +140,10 @@ public class LeagueSummoner {
     
     public LeagueGame getActiveGame() {
         return _activeGame;
+    }
+    
+    public boolean isBot() {
+        return _isBot;
     }
     
     public String toString() {
