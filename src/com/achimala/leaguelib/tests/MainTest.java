@@ -25,6 +25,11 @@ import java.util.Map;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.Condition;
 
+// This tests pretty much everything. It downloads as much information as it can about a given summoner and displays it.
+// NOTE: You must pass in the password of the account(s) being used as a command line argument, so if someone pulls
+// this code and tries to run it, it's not going to work correctly out of the box.
+// If you're not one of the developers of this project, you'll want to change the account usernames and passwords below
+// to your own personal test accounts. (And change the summoner's name if you want).
 public class MainTest {
     private static int count = 0;
     private static ReentrantLock lock = new ReentrantLock();
@@ -50,6 +55,8 @@ public class MainTest {
         final LeagueConnection c = new LeagueConnection();
         c.getAccountQueue().addAccount(new LeagueAccount(LeagueServer.NORTH_AMERICA, "3.02.xx", "anshuchimala2", args[0]));
         c.getAccountQueue().addAccount(new LeagueAccount(LeagueServer.NORTH_AMERICA, "3.02.xx", "anshuchimala3", args[0]));
+        final String SUMMONER_TO_LOOK_UP = "sminja";
+        
         Map<LeagueAccount, LeagueException> exceptions = c.getAccountQueue().connectAll();
         if(exceptions != null) {
             for(LeagueAccount account : exceptions.keySet())
@@ -59,7 +66,7 @@ public class MainTest {
         
         lock.lock();
         incrementCount();
-        c.getSummonerService().getSummonerByName("sminja", new Callback<LeagueSummoner>() {
+        c.getSummonerService().getSummonerByName(SUMMONER_TO_LOOK_UP, new Callback<LeagueSummoner>() {
             public void onCompletion(LeagueSummoner summoner) {
                 lock.lock();
                 
