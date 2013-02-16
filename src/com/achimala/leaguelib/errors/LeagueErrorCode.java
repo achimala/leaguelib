@@ -25,7 +25,7 @@ public enum LeagueErrorCode {
     ACTIVE_GAME_NOT_FOUND("com.riotgames.platform.game.GameNotFoundException"),
     ACTIVE_GAME_NOT_SPECTATBLE("com.riotgames.platform.game.GameObserverModeNotEnabledException");
     
-    private String _exceptionString=null;
+    private String _exceptionString;
     
     private LeagueErrorCode() { }
     

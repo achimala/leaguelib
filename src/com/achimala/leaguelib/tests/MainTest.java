@@ -47,15 +47,19 @@ public class MainTest {
     }
     
     public static void main(String[] args) throws Exception {
+        final LeagueConnection c = new LeagueConnection();
+        c.getAccountQueue().addAccount(new LeagueAccount(LeagueServer.NORTH_AMERICA, "3.02.xx", "anshuchimala2", args[0]));
+        c.getAccountQueue().addAccount(new LeagueAccount(LeagueServer.NORTH_AMERICA, "3.02.xx", "anshuchimala3", args[0]));
+        Map<LeagueAccount, LeagueException> exceptions = c.getAccountQueue().connectAll();
+        if(exceptions != null) {
+            for(LeagueAccount account : exceptions.keySet())
+                System.out.println(account + " error: " + exceptions.get(account));
+            return;
+        }
+        
         lock.lock();
-        
-        final LeagueConnection c = new LeagueConnection(LeagueServer.NORTH_AMERICA);
-        //c.setCredentials("anshuchimala2", args[0], "3.01.asdf");
-        c.login(args[0]);
-        c.connectAll();
-        
         incrementCount();
-        c.getSummonerService().getSummonerByName("nawjttricka", new Callback<LeagueSummoner>() {
+        c.getSummonerService().getSummonerByName("sminja", new Callback<LeagueSummoner>() {
             public void onCompletion(LeagueSummoner summoner) {
                 lock.lock();
                 
@@ -181,7 +185,7 @@ public class MainTest {
             }
             public void onError(Exception ex) {
                 lock.lock();
-                System.out.println(ex.getMessage());
+                ex.printStackTrace();
                 decrementCount();
                 lock.unlock();
             }

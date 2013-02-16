@@ -17,8 +17,8 @@
 package com.achimala.leaguelib.errors;
 
 public class LeagueException extends Exception {
-    LeagueErrorCode _errorCode=null;
-    Object _internalData=null;
+    LeagueErrorCode _errorCode;
+    Object _internalData;
     
     public LeagueException(LeagueErrorCode code) {
         this(code, null, null);

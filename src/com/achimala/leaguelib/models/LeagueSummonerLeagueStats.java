@@ -55,13 +55,13 @@ public class LeagueSummonerLeagueStats {
         }
     }
     
-    private LeagueMatchmakingQueue _queue=null;
-    private String _leagueName=null;
+    private LeagueMatchmakingQueue _queue;
+    private String _leagueName;
     private int _previousDayLeaguePosition=-1, _wins=0, _losses=0, _leaguePoints=0;
-    private LeagueRankedTier _tier=null;
-    private LeagueRankedRank _rank=null;
+    private LeagueRankedTier _tier;
+    private LeagueRankedRank _rank;
     private boolean _inactive=false, _veteran=false, _hotStreak=false, _freshBlood=false;
-    private MiniSeries _miniSeries=null;
+    private MiniSeries _miniSeries;
     
     public LeagueSummonerLeagueStats() {
     }

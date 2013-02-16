@@ -21,12 +21,12 @@ import com.gvaneyck.rtmp.TypedObject;
 public class LeagueSummoner {
     private int _id=-1, _accountId=-1;
     private int _profileIconId=0, _level=0;
-    private String _name=null, _internalName=null;
+    private String _name, _internalName;
     private boolean _isBot = false;
-    LeagueSummonerProfileInfo _profileInfo=null;
-    LeagueSummonerLeagueStats _leagueStats=null;
-    LeagueSummonerRankedStats _rankedStats=null;
-    LeagueGame _activeGame=null;
+    LeagueSummonerProfileInfo _profileInfo;
+    LeagueSummonerLeagueStats _leagueStats;
+    LeagueSummonerRankedStats _rankedStats;
+    LeagueGame _activeGame;
     
     public LeagueSummoner() {
         _profileInfo = new LeagueSummonerProfileInfo();

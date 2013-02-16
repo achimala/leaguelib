@@ -16,7 +16,6 @@
 
 package com.achimala.leaguelib.connection;
 
-import com.gvaneyck.rtmp.LoLRTMPSClient;
 import com.achimala.util.Callback;
 import com.gvaneyck.rtmp.TypedObject;
 import com.achimala.leaguelib.services.*;
@@ -24,182 +23,109 @@ import com.achimala.leaguelib.errors.*;
 import java.io.IOException;
 
 public class LeagueConnection {
-    private static final String NA_VERSION = "3.01.something";
-    //holds user,pass,version for each client
-    //eventually replace this by reading in list from .config
-    private static final String[][] CLIENT_LIST = {{NA_VERSION, "lolteam0", ""}, {NA_VERSION, "lolteam2", ""}, {NA_VERSION, "lolteam3", ""}};
-    private LeagueServer _server=null;
-    private LoLRTMPSClient _rtmpClients[] = new LoLRTMPSClient[CLIENT_LIST.length];
-    private SummonerService _summonerService=null;
-    private LeaguesService _leaguesService=null;
-    private PlayerStatsService _playerStatsService=null;
-    private GameService _gameService=null;
-    private LeagueException[] _connExceptions = new LeagueException[_rtmpClients.length];
-    private int taskCounter = 0;
+    // private static final String NA_VERSION = "3.01.something";
+    // private static final String[][] CLIENT_LIST = {{NA_VERSION, "lolteam0", ""}, {NA_VERSION, "lolteam2", ""}, {NA_VERSION, "lolteam3", ""}};
+    private SummonerService _summonerService;
+    private LeaguesService _leaguesService;
+    private PlayerStatsService _playerStatsService;
+    private GameService _gameService;
     
-    public LeagueConnection(LeagueServer server) {
-        _server = server;
-    }
-
-    public void login(String password) {
-        for(int i = 0; i < CLIENT_LIST.length; i++) {
-            if(_rtmpClients[i] != null) {
-                if(_rtmpClients[i].isConnected())
-                    _rtmpClients[i].close();
-            }
-            //order of arfuments: servercode, version, user, pass
-            _rtmpClients[i] = new LoLRTMPSClient(_server.getServerCode(), CLIENT_LIST[i][0], CLIENT_LIST[i][1], password);
-        }
-    }
+    private LeagueAccountQueue _accountQueue;
     
-    
-    /*public void setCredentials(String username, String password, String clientVersion) {
-        if(_rtmpClients != null) {
-            if(_rtmpClients.isConnected())
-                _rtmpClients.close();
-        }
-        _rtmpClients = new LoLRTMPSClient(_server.getServerCode(), clientVersion, username, password);
-    }*/
-
-    public void connectAll() {
-        for(int i = 0; i < _rtmpClients.length; i++) {
-            try {
-                connect(_rtmpClients[i]);
-            }
-            catch(LeagueException e) {
-                _connExceptions[i] = e;
-                continue;
-            }
-        }
-    }
-
-    public LeagueException[] getConnectionExceptions() {
-        return _connExceptions;
-    }
-
-    public void connect(LoLRTMPSClient client) throws LeagueException {
-        if(client == null)
-            throw new LeagueException(LeagueErrorCode.AUTHENTICATION_ERROR, "Missing authentication credentials for connection to server " + _server);
-        try {
-            if(client.isConnected()) {
-                if(client.isLoggedIn())
-                    return;
-                else
-                    client.login();
-            } else
-                client.connectAndLogin();
-        } catch(IOException ex) {
-            throw new LeagueException(LeagueErrorCode.NETWORK_ERROR, ex.getMessage());
-        }
-    }
-    
-    /*public void connect() throws LeagueException {
-        if(_rtmpClients == null)
-            throw new LeagueException(LeagueErrorCode.AUTHENTICATION_ERROR, "Missing authentication credentials for connection to server " + _server);
-        try {
-            if(_rtmpClients.isConnected()) {
-                if(_rtmpClients.isLoggedIn())
-                    return;
-                else
-                    _rtmpClients.login();
-            } else
-                _rtmpClients.connectAndLogin();
-        } catch(IOException ex) {
-            throw new LeagueException(LeagueErrorCode.NETWORK_ERROR, ex.getMessage());
-        }
-    }*/
-    
-    /*public boolean isConnected() {
-        return (_rtmpClient == null || _rtmpClient.isLoggedIn());
-    }*/
-
-    public boolean isAnyoneConnected() {
-        for(LoLRTMPSClient c : _rtmpClients) {
-            if(isConnected(c))
-                return true;
-        }
-        return false;
-    }
-
-    public boolean isEveryoneConnected() {
-        for(LoLRTMPSClient c : _rtmpClients) {
-            if(!isConnected(c))
-                return false;
-        }
-        return true;
-    }
-
-    //don't like this because requires isntance of lolrtmpsclient from outside class
-    public boolean isConnected(LoLRTMPSClient client) {
-        return (client == null || client.isLoggedIn());
-    }
-
-    public boolean isConnected(int clientIndex) {
-        return isConnected(_rtmpClients[clientIndex]);
+    public LeagueConnection() {
+        _accountQueue = new LeagueAccountQueue();
     }
     
     public String toString() {
-        String s = "";
-        for(LoLRTMPSClient c : _rtmpClients)
-            s += String.format("<LeagueConnection:%s (%s)>\n", _server.getServerCode(), isConnected(c) ? "Online" : "Offline");
-        return s;
-    }
-
-    public TypedObject invoke(String service, String method, Object arguments) throws LeagueException {
-        try {
-            LoLRTMPSClient c = getNextClient();
-            System.out.println(c.getUser() + " performing " + method + " in " + service);
-            return c.getResult(c.invoke(service, method, arguments));
-        }
-        catch(IOException e) {
-            throw new LeagueException(LeagueErrorCode.NETWORK_ERROR, e.getMessage());
-        }
-    }
-
-    public void invokeWithCallback(String service, String method, Object arguments, final Callback<TypedObject> callback, com.gvaneyck.rtmp.Callback cb) {
-        try {
-            LoLRTMPSClient c = getNextClient();
-            System.out.println(c.getUser() + " performing " + method + " in " + service);
-            c.invokeWithCallback(service, method, arguments, cb);
-        }
-        catch(IOException e) {
-            callback.onError(e);
-        }
-    }
-
-    private LoLRTMPSClient getNextClient() {
-        return _rtmpClients[taskCounter++ % 3];
+        // String s = String.format("<LeagueConnection %s: ", _server.getServerCode());
+        // for(LeagueAccount account : _accountQueue.getAllAccounts())
+            // s += String.format("%s/%s ", account.getUsername(), account.isConnected() ? "Online" : "Offline");
+        // return s.trim() + ">";
+        
+        return String.format("<LeagueConnection (%d accounts)>", _accountQueue.getAllAccounts().size());
     }
     
-    /*public LoLRTMPSClient getInternalRTMPSClient(int clientIndex) {
-        // This should eventually return a client off of the queue
-        return _rtmpClients[clientIndex];
+    public void setAccountQueue(LeagueAccountQueue queue) {
+        _accountQueue = queue;
     }
-
-    public LoLRTMPSClient[] getAllInternalRTMPSClients() {
-        return _rtmpClients;
-    }*/
+    
+    public LeagueAccountQueue getAccountQueue() {
+        return _accountQueue;
+    }
+    
+    //// RTMP
+    
+    private LeagueAccount nextValidAccount() throws LeagueException {
+        LeagueAccount account = _accountQueue.nextAccount();
+        if(account == null)
+            throw new LeagueException(LeagueErrorCode.RTMP_ERROR, toString() + " has no connected account");
+        return account;
+    }
+    
+    /**
+     * Performs an API call on the League of Legends RTMP server.
+     * Returns the raw packet data from the API call.
+     * The API call will go through whichever account the account queue chooses.
+     * You should probably not use this method; rather, use one of the services.
+     */
+    public TypedObject invoke(String service, String method, Object arguments) throws LeagueException {
+        return nextValidAccount().invoke(service, method, arguments);
+    }
+    
+    /**
+     * Performs an API call on the League of Legends RTMP server through whichever account the account queue chooses.
+     * Same as invoke() but takes place asynchronously on a background thread.
+     */
+    public void invokeWithCallback(String service, String method, Object arguments, final Callback<TypedObject> callback) {
+        try {
+            nextValidAccount().invokeWithCallback(service, method, arguments, callback);
+        } catch(LeagueException ex) {
+            callback.onError(ex);
+        }
+    }
     
     //// Services
     
+    /**
+     * Represents `summonerService` on the League of Legends RTMP API.
+     * This service allows you to interact with Summoners, including retrieving their profile information and other data.
+     * In the context of LeagueLib, enables you to get LeagueSummoner objects for summoners you are interested in.
+     */
     public SummonerService getSummonerService() {
         if(_summonerService == null)
             _summonerService = new SummonerService(this);
         return _summonerService;
     }
     
+    /**
+     * Represents `leaguesServiceProxy` on the League of Legends RTMP API.
+     * This service allows you to interact with the new leagues ladder ranking system.
+     * You can retrieve league information such as league names, league points, division, tier, rank, etc.
+     * In the context of LeagueLib, populates a LeagueSummoner object with leagues information.
+     */
     public LeaguesService getLeaguesService() {
         if(_leaguesService == null)
             _leaguesService = new LeaguesService(this);
         return _leaguesService;
     }
     
+    /**
+     * Represents `playerStatsService` on the League of Legends RTMP API.
+     * This service allows you to interact with player ranked statistics (and some normal game statistics).
+     * In the context of LeagueLib, populates a LeagueSummoner object with ranked stats information, etc.
+     */
     public PlayerStatsService getPlayerStatsService() {
         if(_playerStatsService == null)
             _playerStatsService = new PlayerStatsService(this);
         return _playerStatsService;
     }
     
+    /**
+     * Represents `gameService` on the League of Legends RTMP API.
+     * This service allows you to retrieve real-time information about ongoing games.
+     * In the context of LeagueLib, populates a LeagueSummoner object with active game data,
+     * such as who they're in game with, who they're playing, etc.
+     */
     public GameService getGameService() {
         if(_gameService == null)
             _gameService = new GameService(this);

@@ -62,5 +62,7 @@ public class TestConsole {
             System.out.println("RECV " + lol.getResult(id));
             System.out.println();
         }
+        
+        lol.close();
     }
 }

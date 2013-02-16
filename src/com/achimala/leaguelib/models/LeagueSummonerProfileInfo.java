@@ -19,7 +19,7 @@ package com.achimala.leaguelib.models;
 import com.gvaneyck.rtmp.TypedObject;
 
 public class LeagueSummonerProfileInfo {
-    private LeagueRankedTier _seasonOneTier=null, _seasonTwoTier=null;
+    private LeagueRankedTier _seasonOneTier, _seasonTwoTier;
     // TODO: Runes and masteries...
     
     public LeagueSummonerProfileInfo() {

@@ -47,6 +47,11 @@ public class LeagueSummonerRankedStats {
     }
     
     public int getStatForChampion(LeagueChampion champion, LeagueRankedStatType statType) {
+        if(_stats == null)
+            return -1;
+        Map<LeagueRankedStatType, Integer> stats = _stats.get(champion.getId());
+        if(stats == null)
+            return -1;
         return _stats.get(champion.getId()).get(statType);
     }
     

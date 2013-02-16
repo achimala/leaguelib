@@ -24,7 +24,7 @@ import java.util.Map;
 
 public class LeagueGame {
     private class ObserverCredentials {
-        private String _serverIP=null, _encryptionKey=null;
+        private String _serverIP, _encryptionKey;
         private int _serverPort=-1;
         
         public ObserverCredentials(TypedObject obj) {
@@ -59,13 +59,13 @@ public class LeagueGame {
     }
     
     // TODO: eventually put this in its own enum?
-    private String _gameType=null, _gameMode=null;
+    private String _gameType, _gameMode;
     private LeagueMatchmakingQueue _queue = null;
     private int _id=-1;
-    private List<LeagueSummoner> _playerTeam=null, _enemyTeam=null;
-    private Map<Integer, LeagueChampion> _playerChampionSelections=null;
-    private Map<String, LeagueSummoner> _summoners=null;
-    private ObserverCredentials _observerCredentials=null;
+    private List<LeagueSummoner> _playerTeam, _enemyTeam;
+    private Map<Integer, LeagueChampion> _playerChampionSelections;
+    private Map<String, LeagueSummoner> _summoners;
+    private ObserverCredentials _observerCredentials;
     
     public LeagueGame() {
     }

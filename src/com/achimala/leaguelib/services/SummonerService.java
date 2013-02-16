@@ -33,7 +33,7 @@ public class SummonerService extends LeagueAbstractService {
     
     private LeagueSummoner getSummonerFromResult(TypedObject obj, String name) throws LeagueException {
         if(obj.getTO("body") == null)
-            throw new LeagueException(LeagueErrorCode.SUMMONER_NOT_FOUND, null, name);
+            throw new LeagueException(LeagueErrorCode.SUMMONER_NOT_FOUND, "Summoner " + name + " not found.", name);
         return new LeagueSummoner(obj.getTO("body"));
     }
     

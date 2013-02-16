@@ -68,6 +68,4 @@ public class GameService extends LeagueAbstractService {
             }
         });
     }
-    
-    // retrieveInProgressSpectatorGameInfo -> real time game info
 }
