@@ -131,6 +131,9 @@ public class MainTest {
                 c.getPlayerStatsService().fillRankedStats(summoner, new Callback<LeagueSummoner>() {
                     public void onCompletion(LeagueSummoner summoner) {
                         lock.lock();
+                        for(LeagueChampion champ : summoner.getRankedStats().getAllPlayedChampions())
+                            System.out.println("Has played " + champ.getName());
+                        
                         LeagueChampion champ = LeagueChampion.getChampionWithName("Anivia");
                         Map<LeagueRankedStatType, Integer> stats = summoner.getRankedStats().getAllStatsForChampion(champ);
                         if(stats == null) {

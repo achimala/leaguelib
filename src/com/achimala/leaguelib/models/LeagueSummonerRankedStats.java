@@ -19,6 +19,8 @@ package com.achimala.leaguelib.models;
 import com.gvaneyck.rtmp.TypedObject;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.LinkedList;
+import java.util.List;
 
 public class LeagueSummonerRankedStats {
     private HashMap<Integer, Map<LeagueRankedStatType, Integer>> _stats;
@@ -44,6 +46,16 @@ public class LeagueSummonerRankedStats {
     
     public Map<LeagueRankedStatType, Integer> getAllPlayerStats() {
         return _stats.get(0);
+    }
+    
+    public List<LeagueChampion> getAllPlayedChampions() {
+        List<LeagueChampion> champs = new LinkedList<LeagueChampion>();
+        for(Integer champId : _stats.keySet()) {
+            if(champId.intValue() == 0)
+                continue;
+            champs.add(LeagueChampion.getChampionWithId(champId.intValue()));
+        }
+        return champs;
     }
     
     public int getStatForChampion(LeagueChampion champion, LeagueRankedStatType statType) {
