@@ -17,6 +17,7 @@
 package com.achimala.leaguelib.models;
 
 public enum LeagueMatchmakingQueue {
+    NONE,
     BOT,
     BOT_3x3,
     NORMAL,
