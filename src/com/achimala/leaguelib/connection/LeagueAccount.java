@@ -98,7 +98,7 @@ public class LeagueAccount {
             throw new LeagueException(LeagueErrorCode.RTMP_ERROR, toString() + " is unable to connect to RTMP server");
         try {
             // System.out.println(_username + " performing " + method + " in " + service);
-            return _internalClient.getResult(_internalClient.invoke(service, method, arguments)).getTO("data");
+            return _internalClient.getResult(_internalClient.invoke(service, method, arguments));
         } catch(IOException e) {
             throw new LeagueException(LeagueErrorCode.NETWORK_ERROR, e.getMessage());
         }
@@ -114,7 +114,7 @@ public class LeagueAccount {
             // System.out.println(_username + " performing " + method + " in " + service);
             _internalClient.invokeWithCallback(service, method, arguments, new com.gvaneyck.rtmp.Callback() {
                 public void callback(TypedObject result) {
-                    callback.onCompletion(result.getTO("data"));
+                    callback.onCompletion(result);
                 }
             });
         } catch(IOException e) {

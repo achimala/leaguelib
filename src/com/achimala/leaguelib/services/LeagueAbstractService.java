@@ -50,7 +50,19 @@ public abstract class LeagueAbstractService {
     }
     
     protected void callAsynchronously(String method, Object arguments, final Callback<TypedObject> callback) {
-        _connection.invokeWithCallback(getServiceName(), method, arguments, callback);
+        _connection.invokeWithCallback(getServiceName(), method, arguments, new Callback<TypedObject>() {
+            public void onCompletion(TypedObject obj) {
+                try {
+                    callback.onCompletion(handleResult(obj));
+                } catch(LeagueException ex) {
+                    callback.onError(ex);
+                }
+            }
+            
+            public void onError(Exception ex) {
+                callback.onError(ex);
+            }
+        });
 
         /*try {
             _connection.getInternalRTMPSClient(0).invokeWithCallback(getServiceName(), method, arguments, new com.gvaneyck.rtmp.Callback() {
