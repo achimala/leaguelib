@@ -52,7 +52,7 @@ public class MainTest {
     }
     
     public static void main(String[] args) throws Exception {
-        final LeagueConnection c = new LeagueConnection();
+        final LeagueConnection c = new LeagueConnection(LeagueServer.NORTH_AMERICA);
         c.getAccountQueue().addAccount(new LeagueAccount(LeagueServer.NORTH_AMERICA, "3.02.xx", "anshuchimala2", args[0]));
         c.getAccountQueue().addAccount(new LeagueAccount(LeagueServer.NORTH_AMERICA, "3.02.xx", "anshuchimala3", args[0]));
         final String SUMMONER_TO_LOOK_UP = "sminja";

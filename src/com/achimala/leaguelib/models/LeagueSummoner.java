@@ -16,6 +16,7 @@
 
 package com.achimala.leaguelib.models;
 
+import com.achimala.leaguelib.connection.LeagueServer;
 import com.gvaneyck.rtmp.TypedObject;
 
 public class LeagueSummoner {
@@ -23,6 +24,7 @@ public class LeagueSummoner {
     private int _profileIconId=0, _level=0;
     private String _name, _internalName;
     private boolean _isBot = false;
+    LeagueServer _server;
     LeagueSummonerProfileInfo _profileInfo;
     LeagueSummonerLeagueStats _leagueStats;
     LeagueSummonerRankedStats _rankedStats;
@@ -32,26 +34,27 @@ public class LeagueSummoner {
         _profileInfo = new LeagueSummonerProfileInfo();
     }
     
-    public LeagueSummoner(int id, String name) {
-        this();
-        _id = id;
-        _name = name;
-    }
+    // public LeagueSummoner(int id, String name) {
+    //     this();
+    //     _id = id;
+    //     _name = name;
+    // }
     
-    public LeagueSummoner(TypedObject obj) {
-        this(obj, false);
+    public LeagueSummoner(TypedObject obj, LeagueServer server) {
+        this(obj, server, false);
     }
     
     // The isGamePlayer flag exists because Riot uses the key accountId when the summoner is in a Game DTO
     // (when it's returned from gameService.retrieveInProgressSpectatorGameInfo)
     // But when it's returned via summonerService it's called acctId
-    public LeagueSummoner(TypedObject obj, boolean isGamePlayer) {
+    public LeagueSummoner(TypedObject obj, LeagueServer server, boolean isGamePlayer) {
         this();
         _id = obj.getInt("summonerId");
         _accountId = obj.getInt(isGamePlayer ? "accountId" : "acctId");
         _name = obj.getString(isGamePlayer ? "summonerName" : "name");
         _internalName = obj.getString(isGamePlayer ? "summonerInternalName" : "internalName");
         _profileIconId = obj.getInt("profileIconId");
+        _server = server;
         if(!isGamePlayer)
             _level = obj.getInt("summonerLevel");
         if(isGamePlayer)
@@ -102,6 +105,10 @@ public class LeagueSummoner {
         _isBot = bot;
     }
     
+    public void setServer(LeagueServer server) {
+        _server = server;
+    }
+    
     public int getId() {
         return _id;
     }
@@ -144,6 +151,10 @@ public class LeagueSummoner {
     
     public boolean isBot() {
         return _isBot;
+    }
+    
+    public LeagueServer getServer() {
+        return _server;
     }
     
     public String toString() {

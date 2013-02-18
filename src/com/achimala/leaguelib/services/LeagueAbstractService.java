@@ -29,6 +29,10 @@ public abstract class LeagueAbstractService {
         _connection = connection;
     }
     
+    protected LeagueConnection getConnection() {
+        return _connection;
+    }
+    
     protected TypedObject handleResult(TypedObject result) throws LeagueException {
         if(result.get("result").equals("_error")) {
             System.err.println(result);

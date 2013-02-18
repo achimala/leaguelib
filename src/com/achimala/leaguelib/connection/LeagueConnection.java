@@ -23,25 +23,24 @@ import com.achimala.leaguelib.errors.*;
 import java.io.IOException;
 
 public class LeagueConnection {
-    // private static final String NA_VERSION = "3.01.something";
-    // private static final String[][] CLIENT_LIST = {{NA_VERSION, "lolteam0", ""}, {NA_VERSION, "lolteam2", ""}, {NA_VERSION, "lolteam3", ""}};
     private SummonerService _summonerService;
     private LeaguesService _leaguesService;
     private PlayerStatsService _playerStatsService;
     private GameService _gameService;
+    private LeagueServer _server;
     
     private LeagueAccountQueue _accountQueue;
     
     public LeagueConnection() {
+        this(null);
+    }
+    
+    public LeagueConnection(LeagueServer server) {
+        _server = server;
         _accountQueue = new LeagueAccountQueue();
     }
     
     public String toString() {
-        // String s = String.format("<LeagueConnection %s: ", _server.getServerCode());
-        // for(LeagueAccount account : _accountQueue.getAllAccounts())
-            // s += String.format("%s/%s ", account.getUsername(), account.isConnected() ? "Online" : "Offline");
-        // return s.trim() + ">";
-        
         return String.format("<LeagueConnection (%d accounts)>", _accountQueue.getAllAccounts().size());
     }
     
@@ -49,8 +48,16 @@ public class LeagueConnection {
         _accountQueue = queue;
     }
     
+    public void setServer(LeagueServer server) {
+        _server = server;
+    }
+    
     public LeagueAccountQueue getAccountQueue() {
         return _accountQueue;
+    }
+    
+    public LeagueServer getServer() {
+        return _server;
     }
     
     //// RTMP

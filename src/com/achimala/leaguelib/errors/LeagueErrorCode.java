@@ -23,7 +23,7 @@ public enum LeagueErrorCode {
     SUMMONER_NOT_FOUND,
     SUMMONER_NOT_IN_LEAGUE,
     ACTIVE_GAME_NOT_FOUND("com.riotgames.platform.game.GameNotFoundException"),
-    ACTIVE_GAME_NOT_SPECTATBLE("com.riotgames.platform.game.GameObserverModeNotEnabledException");
+    ACTIVE_GAME_NOT_SPECTATABLE("com.riotgames.platform.game.GameObserverModeNotEnabledException");
     
     private String _exceptionString;
     

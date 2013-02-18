@@ -73,7 +73,7 @@ public class LeagueGame {
     private void fillListWithPlayers(List<LeagueSummoner> list, Object[] team, LeagueSummoner primarySummoner) {
         for(Object o : team) {
             TypedObject to = (TypedObject)o;
-            LeagueSummoner sum = new LeagueSummoner(to, true);
+            LeagueSummoner sum = new LeagueSummoner(to, primarySummoner.getServer(), true);
             if(sum.isEqual(primarySummoner))
                 sum = primarySummoner;
             _summoners.put(sum.getInternalName(), sum);
