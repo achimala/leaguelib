@@ -9,10 +9,17 @@ This is the stuff we built to replace the backend that runs [LoLTeam](http://www
 
 ### Features
 * Completely asynchronous API calls to the League of Legends RTMP server.
-* Synchronous API calls just as easily, for use in simple applications or on top of distributed, scalable, concurrent platforms like [Akka](http://www.akka.io)
+* Synchronous API calls just as easily, for use in simple applications or on top of distributed, scalable, concurrent platforms like [Akka](http://www.akka.io).
 * Easy support for multiple League of Legends accounts for increased concurrency and minimal rate-limiting side effects.
 * Efficient design: request only as much information as you need, using the same API calls and structure that League of Legends uses internally.
 * Clean MVC patterns: Accounts can easily be marshaled to files or recorded in databases, distributed to different account queues for different servers, and a single LeagueSummoner model can contain references to real-time data across your application that updates in place.
+
+### Usage
+
+We intend to put up a better form of documentation in the future, but until then, here are some basic implementation notes.
+* LeagueLib doesn't embed any kind of thread/job scheduling or distributed computing architecture. We figured more than enough of these exist and we instead chose to build something that could plug into any of them easily. For LoLTeam and LoLTalk, we simply wrote a layer on top of LeagueLib that plugs it into Play Framework's asynchronous job scheduling built on top of Akka, which runs on multiple processes distributed across the cloud via Heroku.
+* LeagueLib was designed with the primary goal of giving us scaffolding to build LoLTeam and LoLTalk on top of. As such, it is robust but not necessarily completely feature complete. We're going to keep adding on to it.
+* The LeagueSummoner object is the focus of everything in LeagueLib as it is right now. The very fundamental summoner service API calls return empty summoner containers with names and IDs and nothing else. As you request different types of information from different services, they get filled into your single summoner object in place. You should not be maintaining multiple copies of a summoner or throwing them away for no reason.
 
 ### License
 LeagueLib is licensed under the GNU GPL v3. You may use this code for commercial or non-commercial purposes. Please include attribution (preferably a link to this page) if you use this library. We'd really appreciate it!
