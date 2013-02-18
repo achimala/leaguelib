@@ -49,16 +49,18 @@ public class LeagueSummoner {
     // But when it's returned via summonerService it's called acctId
     public LeagueSummoner(TypedObject obj, LeagueServer server, boolean isGamePlayer) {
         this();
-        _id = obj.getInt("summonerId");
-        _accountId = obj.getInt(isGamePlayer ? "accountId" : "acctId");
-        _name = obj.getString(isGamePlayer ? "summonerName" : "name");
-        _internalName = obj.getString(isGamePlayer ? "summonerInternalName" : "internalName");
-        _profileIconId = obj.getInt("profileIconId");
-        _server = server;
-        if(!isGamePlayer)
-            _level = obj.getInt("summonerLevel");
         if(isGamePlayer)
             _isBot = obj.type.equals("com.riotgames.platform.game.BotParticipant");
+        _name = obj.getString(isGamePlayer ? "summonerName" : "name");
+        _internalName = obj.getString(isGamePlayer ? "summonerInternalName" : "internalName");
+        if(!_isBot) {
+            _id = obj.getInt("summonerId");
+            _accountId = obj.getInt(isGamePlayer ? "accountId" : "acctId");
+            _profileIconId = obj.getInt("profileIconId");
+            _server = server;
+            if(!isGamePlayer)
+                _level = obj.getInt("summonerLevel");
+        }
     }
     
     public void setId(int id) {

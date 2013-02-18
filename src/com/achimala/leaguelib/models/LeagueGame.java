@@ -63,7 +63,7 @@ public class LeagueGame {
     private LeagueMatchmakingQueue _queue = null;
     private int _id=-1;
     private List<LeagueSummoner> _playerTeam, _enemyTeam;
-    private Map<Integer, LeagueChampion> _playerChampionSelections;
+    private Map<String, LeagueChampion> _playerChampionSelections;
     private Map<String, LeagueSummoner> _summoners;
     private ObserverCredentials _observerCredentials;
     
@@ -96,11 +96,10 @@ public class LeagueGame {
         if(!_playerTeam.contains(primarySummoner))
             swapTeams();
         
-        _playerChampionSelections = new HashMap<Integer, LeagueChampion>();
+        _playerChampionSelections = new HashMap<String, LeagueChampion>();
         for(Object o : obj.getArray("playerChampionSelections")) {
             TypedObject to = (TypedObject)o;
-            LeagueSummoner sum = _summoners.get(to.getString("summonerInternalName"));
-            _playerChampionSelections.put(sum.getId(), LeagueChampion.getChampionWithId(to.getInt("championId")));
+            _playerChampionSelections.put(to.getString("summonerInternalName"), LeagueChampion.getChampionWithId(to.getInt("championId")));
         }
     }
     
@@ -157,7 +156,7 @@ public class LeagueGame {
     }
     
     public LeagueChampion getChampionSelectionForSummoner(LeagueSummoner summoner) {
-        return _playerChampionSelections.get(summoner.getId());
+        return _playerChampionSelections.get(summoner.getInternalName());
     }
     
     public ObserverCredentials getObserverCredentials() {
