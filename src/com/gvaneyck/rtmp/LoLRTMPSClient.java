@@ -300,7 +300,7 @@ public class LoLRTMPSClient extends RTMPSClient
 		
 		loggedIn = true;
 
-		System.out.println("Connected to " + region);
+		// System.out.println("Connected to " + region);
 	}
 
 	/**
