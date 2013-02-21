@@ -106,7 +106,10 @@ public class LeagueSummonerLeagueStats {
     public int getApproximateElo() {
         double elo = 450;
         elo += _tier.getApproximateEloContribution();
-        elo += _rank.getApproximateEloContribution();
+        if(_tier == LeagueRankedTier.CHALLENGER)
+            elo += LeagueRankedRank.V.getApproximateEloContribution();
+        else
+            elo += _rank.getApproximateEloContribution();
         elo += 0.5 * _leaguePoints;
         if(_miniSeries != null)
             elo += 20.0 * _miniSeries.getWins()/_miniSeries.getTarget();
