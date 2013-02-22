@@ -16,6 +16,7 @@
 
 package com.achimala.leaguelib.models;
 
+import com.achimala.leaguelib.models.LeagueChampion;
 import com.achimala.util.BidirectionalMap;
 import java.util.HashMap;
 
