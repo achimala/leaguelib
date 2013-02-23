@@ -59,14 +59,14 @@ public class PlayerStatsService extends LeagueAbstractService {
         });
     }
     
-    private List<MatchHistoryEntry> getMatchHistoryEntriesFromResult(TypedObject obj) {
+    private List<MatchHistoryEntry> getMatchHistoryEntriesFromResult(TypedObject obj, LeagueSummoner summoner) {
         Object[] games = obj.getTO("body").getArray("gameStatistics");
         if(games == null || games.length == 0)
             // No match history available; return an empty list
             return new ArrayList<MatchHistoryEntry>();
         List<MatchHistoryEntry> recentGames = new ArrayList<MatchHistoryEntry>();
         for(Object game : games)
-            recentGames.add(new MatchHistoryEntry((TypedObject)game));
+            recentGames.add(new MatchHistoryEntry((TypedObject)game, summoner));
         return recentGames;
     }
     
@@ -77,13 +77,13 @@ public class PlayerStatsService extends LeagueAbstractService {
         // You have to call SummonerService->getSummonerNames to batch resolve the IDs to names
         // TODO: Automate this process somehow...
         TypedObject obj = call("getRecentGames", new Object[] { summoner.getAccountId() });
-        summoner.setMatchHistory(getMatchHistoryEntriesFromResult(obj));
+        summoner.setMatchHistory(getMatchHistoryEntriesFromResult(obj, summoner));
     }
     
     public void fillMatchHistory(final LeagueSummoner summoner, final Callback<LeagueSummoner> callback) {
         callAsynchronously("getRecentGames", new Object[] { summoner.getAccountId() }, new Callback<TypedObject>() {
             public void onCompletion(TypedObject obj) {
-                summoner.setMatchHistory(getMatchHistoryEntriesFromResult(obj));
+                summoner.setMatchHistory(getMatchHistoryEntriesFromResult(obj, summoner));
                 callback.onCompletion(summoner);
             }
             public void onError(Exception ex) {

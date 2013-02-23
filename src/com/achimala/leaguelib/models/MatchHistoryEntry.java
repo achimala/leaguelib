@@ -37,7 +37,7 @@ public class MatchHistoryEntry {
     public MatchHistoryEntry() {
     }
         
-    public MatchHistoryEntry(TypedObject obj) {
+    public MatchHistoryEntry(TypedObject obj, LeagueSummoner primarySummoner) {
         _gameId = obj.getInt("gameId");
         _gameType = obj.getString("gameType");
         _leaver = obj.getBool("leaver");
@@ -49,10 +49,15 @@ public class MatchHistoryEntry {
         _playerChampionSelections = new HashMap<Integer, LeagueChampion>();
         _stats = new HashMap<MatchHistoryStatType, Integer>();
         
-        _playerChampionSelections.put(obj.getInt("summonerId"), LeagueChampion.getChampionWithId(obj.getInt("championId")));
+        // (for some unknown reason, sometimes the "summonerId" key is 0 in the data returned from Riot)
+        // This is the only reason we have to pass the primary summoner into this constructor
+        // ...which is pretty dumb
+        _playerChampionSelections.put(primarySummoner.getId(), LeagueChampion.getChampionWithId(obj.getInt("championId")));
         
         int playerTeamId = obj.getInt("teamId");
         
+        // Riot doesn't include this person in the "fellow players" list, which I suppose makes sense
+        _playerTeam.add(primarySummoner);
         for(Object playerObj : obj.getArray("fellowPlayers")) {
             TypedObject player = (TypedObject)playerObj;
             LeagueSummoner summoner = new LeagueSummoner();
