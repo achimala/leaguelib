@@ -27,4 +27,4 @@ LeagueLib is licensed under the GNU GPL v3. You may use this code for commercial
 ### Caution
 LeagueLib is still currently in development. We would advise against using it in production applications until it's ready.
 
-Code pulled off the master branch should always work correctly and pass all tests. We intend to put up sample code soon, but until then you should hopefully be able to figure out how to use LeagueLib by viewing [MainTest.java](https://github.com/achimala/leaguelib/blob/master/src/com/achimala/leaguelib/tests/MainTest.java) or by reading through the comments on the LeagueConnection, LeagueAccount, and \[A-Z\]\[a-z\]\+Service.java classes.
+Code pulled off the master branch should always work correctly and pass all tests. We intend to put up sample code soon, but until then you should hopefully be able to figure out how to use LeagueLib by viewing [MainTest.java](https://github.com/achimala/leaguelib/blob/master/src/com/achimala/leaguelib/tests/MainTest.java) or by reading through the comments on the LeagueConnection, LeagueAccount, and *Service.java classes.
