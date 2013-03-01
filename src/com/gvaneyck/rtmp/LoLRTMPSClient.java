@@ -354,8 +354,9 @@ public class LoLRTMPSClient extends RTMPSClient
 				System.err.println("Error when reconnecting: ");
 				e.printStackTrace(); // For debug purposes
 
-				sleep(5000);
-				super.reconnect(); // Need to reconnect again here
+                // This is not necessary; handled externally
+				// sleep(5000);
+				// super.reconnect(); // Need to reconnect again here
 			}
 		} 
 	}
