@@ -137,6 +137,7 @@ public class LeagueChampion {
         _modelMap.put(267, "Nami");
         _modelMap.put(254, "Vi");
         _modelMap.put(412, "Thresh");
+        _modelMap.put(133, "Quinn");
         
         _champMap = new HashMap<Integer, LeagueChampion>();
     }
