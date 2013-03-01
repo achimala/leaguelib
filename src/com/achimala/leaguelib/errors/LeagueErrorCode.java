@@ -17,6 +17,8 @@
 package com.achimala.leaguelib.errors;
 
 public enum LeagueErrorCode {
+    UNKNOWN,
+    UNSUPPORTED_SERVER,
     NETWORK_ERROR,
     RTMP_ERROR,
     AUTHENTICATION_ERROR,

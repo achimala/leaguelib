@@ -18,6 +18,7 @@ package com.achimala.leaguelib.models;
 
 import com.achimala.leaguelib.connection.LeagueServer;
 import com.gvaneyck.rtmp.TypedObject;
+import java.util.List;
 
 public class LeagueSummoner {
     private int _id=-1, _accountId=-1;
@@ -28,6 +29,7 @@ public class LeagueSummoner {
     LeagueSummonerProfileInfo _profileInfo;
     LeagueSummonerLeagueStats _leagueStats;
     LeagueSummonerRankedStats _rankedStats;
+    List<MatchHistoryEntry> _matchHistory;
     LeagueGame _activeGame;
     
     public LeagueSummoner() {
@@ -99,6 +101,10 @@ public class LeagueSummoner {
         _rankedStats = stats;
     }
     
+    public void setMatchHistory(List<MatchHistoryEntry> matchHistory) {
+        _matchHistory = matchHistory;
+    }
+    
     public void setActiveGame(LeagueGame game) {
         _activeGame = game;
     }
@@ -145,6 +151,10 @@ public class LeagueSummoner {
     
     public LeagueSummonerRankedStats getRankedStats() {
         return _rankedStats;
+    }
+    
+    public List<MatchHistoryEntry> getMatchHistory() {
+        return _matchHistory;
     }
     
     public LeagueGame getActiveGame() {

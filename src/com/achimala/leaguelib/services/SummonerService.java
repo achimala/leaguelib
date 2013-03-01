@@ -22,6 +22,8 @@ import com.achimala.leaguelib.errors.*;
 import com.achimala.util.Callback;
 import com.gvaneyck.rtmp.TypedObject;
 
+import java.util.Arrays;
+
 public class SummonerService extends LeagueAbstractService {
     public SummonerService(LeagueConnection connection) {
         super(connection);
@@ -35,6 +37,54 @@ public class SummonerService extends LeagueAbstractService {
         if(obj.getTO("body") == null)
             throw new LeagueException(LeagueErrorCode.SUMMONER_NOT_FOUND, "Summoner " + name + " not found.", name);
         return new LeagueSummoner(obj.getTO("body"), getConnection().getServer());
+    }
+    
+    private String[] getNamesFromResult(TypedObject obj) {
+        Object[] names = obj.getArray("body");
+        if(names == null)
+            return null;
+        return Arrays.copyOf(names, names.length, String[].class);
+    }
+    
+    public String[] getSummonerNames(Object[] summonerIds) throws LeagueException {
+        TypedObject obj = call("getSummonerNames", new Object[] { summonerIds });
+        return getNamesFromResult(obj);
+    }
+    
+    public void getSummonerNames(final Object[] summonerIds, final Callback<String[]> callback) {
+        callAsynchronously("getSummonerNames", new Object[] { summonerIds }, new Callback<TypedObject>() {
+            public void onCompletion(TypedObject obj) {
+                try {
+                    callback.onCompletion(getNamesFromResult(obj));
+                } catch(Exception ex) {
+                    callback.onError(ex);
+                }
+            }
+            public void onError(Exception ex) {
+                callback.onError(ex);
+            }
+        });
+    }
+    
+    public String getSummonerName(int summonerId) throws LeagueException {
+        String[] names = getSummonerNames(new Object[] { summonerId });
+        if(names == null || names.length != 1)
+            return null;
+        return names[0];
+    }
+    
+    public void getSummonerName(int summonerId, final Callback<String> callback) {
+        getSummonerNames(new Object[] { summonerId }, new Callback<String[]>() {
+            public void onCompletion(String[] names) {
+                if(names == null || names.length != 1)
+                    callback.onCompletion(null);
+                else
+                    callback.onCompletion(names[0]);
+            }
+            public void onError(Exception ex) {
+                callback.onError(ex);
+            }
+        });
     }
     
     public LeagueSummoner getSummonerByName(String name) throws LeagueException {
