@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class LeagueGame {
+public class LeagueGame implements PlayerList {
     private class ObserverCredentials {
         private String _serverIP, _encryptionKey;
         private int _serverPort=-1;

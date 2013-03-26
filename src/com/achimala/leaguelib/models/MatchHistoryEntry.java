@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Date;
 
-public class MatchHistoryEntry {
+public class MatchHistoryEntry implements PlayerList {
     int _gameId;
     private String _gameType;
     // TODO: Summoner spells
