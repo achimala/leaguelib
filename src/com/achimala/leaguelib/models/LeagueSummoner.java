@@ -19,6 +19,8 @@ package com.achimala.leaguelib.models;
 import com.achimala.leaguelib.connection.LeagueServer;
 import com.gvaneyck.rtmp.TypedObject;
 import java.util.List;
+import java.util.Comparator;
+import java.util.Collections;
 
 public class LeagueSummoner {
     private int _id=-1, _accountId=-1;
@@ -103,6 +105,13 @@ public class LeagueSummoner {
     
     public void setMatchHistory(List<MatchHistoryEntry> matchHistory) {
         _matchHistory = matchHistory;
+        Collections.sort(_matchHistory, new Comparator() {
+            public int compare(Object match1Obj, Object match2Obj) {
+                MatchHistoryEntry match1 = (MatchHistoryEntry)match1Obj;
+                MatchHistoryEntry match2 = (MatchHistoryEntry)match2Obj;
+                return match1.getCreationDate().compareTo(match2.getCreationDate());
+            }
+        });
     }
     
     public void setActiveGame(LeagueGame game) {
@@ -155,6 +164,12 @@ public class LeagueSummoner {
     
     public List<MatchHistoryEntry> getMatchHistory() {
         return _matchHistory;
+    }
+    
+    public MatchHistoryEntry getMostRecentMatch() {
+        if(_matchHistory != null && _matchHistory.size() > 0)
+            return _matchHistory.get(0);
+        return null;
     }
     
     public LeagueGame getActiveGame() {
