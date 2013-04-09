@@ -36,7 +36,7 @@ public class GameService extends LeagueAbstractService {
         if(result.get("result").equals("_error")) {
             String reason = result.getExceptionMessage();
             LeagueErrorCode code = LeagueErrorCode.getErrorCodeForException(reason);
-            if(code == LeagueErrorCode.ACTIVE_GAME_NOT_FOUND)
+            if(code == LeagueErrorCode.ACTIVE_GAME_NOT_FOUND || code == LeagueErrorCode.ACTIVE_GAME_NOT_SPECTATABLE)
                 return null;
         }
         return super.handleResult(result);
