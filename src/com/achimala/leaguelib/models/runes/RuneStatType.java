@@ -1,5 +1,9 @@
 package com.achimala.leaguelib.models.runes;
 
+/**
+ * Represents the stat offered by a particular rune.
+ * (For example, Greater Quintessences of Lifesteal internally provide the PercentLifeStealMod stat)
+ */
 public enum RuneStatType {
     LIFESTEAL("PercentLifeStealMod", "lifesteal", false),
     ARMOR_PENETRATION_PER_LEVEL("rFlatArmorPenetrationModPerLevel", "armor penetration/level", true),
@@ -18,7 +22,7 @@ public enum RuneStatType {
     MANA("FlatMPPoolMod", "mana", true),
     ATTACK_DAMAGE("FlatPhysicalDamageMod", "attack damage", true),
     GOLD_PER_10("rFlatGoldPer10Mod", "gold/10", true),
-    HEALTH("PercentHPPoolMod", "health", false),
+    PERCENT_HEALTH("PercentHPPoolMod", "health", false),
     COOLDOWNS("rPercentCooldownMod", "cooldowns", false),
     ABILITY_POWER_PER_LEVEL("rFlatMagicDamageModPerLevel", "ability power/level", true),
     COOLDOWNS_PER_LEVEL("rPercentCooldownModPerLevel", "cooldowns/level", false),
@@ -52,7 +56,14 @@ public enum RuneStatType {
         _flat = flat;
     }
     
-    public String getHumanReadableString(double amount) {
+    public static RuneStatType findRuneStatTypeWithInternalName(String internalName) {
+        for(RuneStatType type : RuneStatType.values())
+            if(type._internalName.equals(internalName))
+                return type;
+        return null;
+    }
+    
+    public String getDescription(double amount) {
         String n = "";
         if(!_flat)
             amount *= 100;
