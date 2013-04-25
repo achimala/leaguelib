@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Comparator;
+import java.util.Arrays;
 
 public class LeagueGame implements PlayerList {
     private class ObserverCredentials {
@@ -63,8 +65,11 @@ public class LeagueGame implements PlayerList {
     private LeagueMatchmakingQueue _queue = null;
     private int _id=-1;
     private List<LeagueSummoner> _playerTeam, _enemyTeam;
+    private TeamType _playerTeamType = TeamType.BLUE;
+    private TeamType _enemyTeamType = TeamType.PURPLE;
     private Map<String, LeagueChampion> _playerChampionSelections;
     private Map<String, LeagueSummoner> _summoners;
+    private Map<TeamType, List<LeagueChampion>> _bannedChampions;
     private ObserverCredentials _observerCredentials;
     
     public LeagueGame() {
@@ -99,8 +104,28 @@ public class LeagueGame implements PlayerList {
         _playerChampionSelections = new HashMap<String, LeagueChampion>();
         for(Object o : obj.getArray("playerChampionSelections")) {
             TypedObject to = (TypedObject)o;
-            _playerChampionSelections.put(to.getString("summonerInternalName"), LeagueChampion.getChampionWithId(to.getInt("championId")));
+            _playerChampionSelections.put(to.getString("summonerInternalName"), 
+					  LeagueChampion.getChampionWithId(to.getInt("championId")));
         }
+	_bannedChampions = new HashMap<TeamType, List<LeagueChampion>>();
+	for(TeamType t : TeamType.values()) {
+	    _bannedChampions.put(t, new ArrayList<LeagueChampion>());
+	}
+	Object[] sortedBans = obj.getArray("bannedChampions");
+	Arrays.sort(sortedBans, new Comparator<Object>() {
+		public int compare(Object o1, Object o2) {
+		    TypedObject to1 = (TypedObject)o1;
+		    TypedObject to2 = (TypedObject)o2;
+		    return to1.getInt("pickTurn").compareTo(to2.getInt("pickTurn"));
+		}
+	    });
+	for(Object o : sortedBans) {
+	    TypedObject to = (TypedObject)o;
+	    TeamType teamType = TeamType.getFromId(to.getInt("teamId"));
+	    LeagueChampion champion = LeagueChampion.getChampionWithId(to.getInt("championId"));
+	    _bannedChampions.get(teamType).add(champion);
+	}
+	
     }
     
     public void setGameType(String type) {
@@ -123,6 +148,8 @@ public class LeagueGame implements PlayerList {
         List<LeagueSummoner> temp = _playerTeam;
         _playerTeam = _enemyTeam;
         _enemyTeam = temp;
+	_playerTeamType = TeamType.PURPLE;
+	_enemyTeamType = TeamType.BLUE;
     }
     
     public String getGameType() {
@@ -162,4 +189,17 @@ public class LeagueGame implements PlayerList {
     public ObserverCredentials getObserverCredentials() {
         return _observerCredentials;
     }
+
+    public TeamType getPlayerTeamType() {
+	return _playerTeamType;
+    }
+
+    public TeamType getEnemyTeamType() {
+	return _enemyTeamType;
+    }
+    
+    public List<LeagueChampion> getBannedChampionsForTeam(TeamType type) {
+	return _bannedChampions.get(type);
+    }
+	    
 }
