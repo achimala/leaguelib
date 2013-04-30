@@ -53,9 +53,9 @@ public class MainTest {
     
     public static void main(String[] args) throws Exception {
         final LeagueConnection c = new LeagueConnection(LeagueServer.NORTH_AMERICA);
-        c.getAccountQueue().addAccount(new LeagueAccount(LeagueServer.NORTH_AMERICA, "3.02.xx", "anshuchimala2", args[0]));
-        c.getAccountQueue().addAccount(new LeagueAccount(LeagueServer.NORTH_AMERICA, "3.02.xx", "anshuchimala3", args[0]));
-        final String SUMMONER_TO_LOOK_UP = "sminja";
+        c.getAccountQueue().addAccount(new LeagueAccount(LeagueServer.NORTH_AMERICA, "3.5.xx", "anshuchimala2", args[0]));
+        c.getAccountQueue().addAccount(new LeagueAccount(LeagueServer.NORTH_AMERICA, "3.5.xx", "anshuchimala3", args[0]));
+        final String SUMMONER_TO_LOOK_UP = "chdmwu";
         
         Map<LeagueAccount, LeagueException> exceptions = c.getAccountQueue().connectAll();
         if(exceptions != null) {
@@ -163,12 +163,19 @@ public class MainTest {
                     public void onCompletion(LeagueSummoner summoner) {
                         lock.lock();
                         if(summoner.getActiveGame() != null) {
-                            System.out.println("PLAYER TEAM:");
+			    LeagueGame game = summoner.getActiveGame();
+                            System.out.println("PLAYER TEAM (" + game.getPlayerTeamType() + "):");
                             for(LeagueSummoner sum : summoner.getActiveGame().getPlayerTeam())
                                 System.out.println("    " + sum);
-                            System.out.println("ENEMY TEAM:");
+                            System.out.println("ENEMY TEAM (" + game.getEnemyTeamType() + "):");
                             for(LeagueSummoner sum : summoner.getActiveGame().getEnemyTeam())
                                 System.out.println("    " + sum);
+			    System.out.println("PLAYER TEAM BANS:");
+			    for(LeagueChampion champion : game.getBannedChampionsForTeam(game.getPlayerTeamType()))
+				System.out.println("    " + champion.getName());
+			    System.out.println("ENEMY TEAM BANS:");
+			    for(LeagueChampion champion : game.getBannedChampionsForTeam(game.getEnemyTeamType()))
+				System.out.println("    " + champion.getName());
                         } else {
                             System.out.println("NOT IN GAME");
                         }

@@ -22,7 +22,15 @@ We intend to put up a better form of documentation in the future, but until then
 * The LeagueSummoner object is the focus of everything in LeagueLib as it is right now. The very fundamental summoner service API calls return empty summoner containers with names and IDs and nothing else. As you request different types of information from different services, they get filled into your single summoner object in place. You should not be maintaining multiple copies of a summoner or throwing them away for no reason.
 
 ### License
-LeagueLib is licensed under the GNU GPL v3. You may use this code for commercial or non-commercial purposes. Please include attribution (preferably a link to this page) if you use this library. We'd really appreciate it!
+LeagueLib is licensed under the GNU GPL v3. You may use this code for commercial or non-commercial purposes.
+
+You may:
+* Use LeagueLib in personal or commercial products, with attribution.
+* Modify and distribute LeagueLib, with attribution.
+
+You may NOT:
+* Sell any portion of LeagueLib.
+* Use or distribute any portion of LeagueLib without the included licensing information, or without attribution.
 
 ### Caution
 LeagueLib is still currently in development. We would advise against using it in production applications until it's ready.
