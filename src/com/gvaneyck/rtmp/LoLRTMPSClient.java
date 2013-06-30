@@ -142,6 +142,16 @@ public class LoLRTMPSClient extends RTMPSClient
 			this.server = "prod.br.lol.riotgames.com";
 			this.loginQueue = "https://lq.br.lol.riotgames.com/";
 		}
+		else if (region.equals("LAN"))
+		{
+			this.server = "prod.la1.lol.riotgames.com";
+			this.loginQueue = "https://lq.la1.lol.riotgames.com/";
+		}
+		else if (region.equals("LAS"))
+		{
+			this.server = "prod.la2.lol.riotgames.com";
+			this.loginQueue = "https://lq.la2.lol.riotgames.com/";
+		}
 		else if (region.equals("TR"))
 		{
 			this.server = "prod.tr.lol.riotgames.com";
@@ -185,7 +195,7 @@ public class LoLRTMPSClient extends RTMPSClient
 		else
 		{
 			System.out.println("Invalid region: " + region);
-			System.out.println("Valid region are: NA, EUW, EUN/EUNE, KR, BR, TR, PBE, SG/MY, TW, TH, PH, VN");
+			System.out.println("Valid region are: NA, EUW, EUN/EUNE, KR, BR, LAN, LAS, TR, PBE, SG/MY, TW, TH, PH, VN");
 			System.exit(0);
 		}
 
