@@ -23,7 +23,8 @@ public enum LeagueServer {
     BRAZIL("BR", "Brazil"),
     KOREA("KR", "Korea"),
     LATIN_AMERICA_NORTH("LAN", "Latin America North"),
-    LATIN_AMERICA_SOUTH("LAS", "Latin America South");
+    LATIN_AMERICA_SOUTH("LAS", "Latin America South"),
+    OCEANIA("OCE", "Oceania");
     // Garena servers...
     // PublicBetaEnvironment
     
