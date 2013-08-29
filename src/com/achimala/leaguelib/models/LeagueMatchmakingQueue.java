@@ -17,14 +17,24 @@
 package com.achimala.leaguelib.models;
 
 public enum LeagueMatchmakingQueue {
-    NONE,
-    BOT,
-    BOT_3x3,
-    NORMAL,
-    NORMAL_3x3,
-    ODIN_UNRANKED,
-    RANKED_SOLO_5x5,
-    RANKED_TEAM_3x3,
-    RANKED_TEAM_5x5,
-    ARAM_UNRANKED_5x5
+    NONE ("Custom Game"),
+    BOT ("Co-op vs. AI 5v5"),
+    BOT_3x3 ("Co-op vs. AI 3v3"),
+    NORMAL ("Normal 5v5"),
+    NORMAL_3x3 ("Normal 3v3"),
+    ODIN_UNRANKED ("The Crystal Scar"),
+    RANKED_SOLO_5x5 ("Ranked Solo 5v5"),
+    RANKED_TEAM_3x3 ("Ranked Team 3v3"),
+    RANKED_TEAM_5x5 ("Ranked Team 5v5"),
+    ARAM_UNRANKED_5x5 ("Howling Abyss");
+    
+    private String _displayName;
+
+    private LeagueMatchmakingQueue(String displayName) {
+        _displayName = displayName;
+    }
+
+    public String getDisplayName() {
+        return _displayName;
+    }
 }
