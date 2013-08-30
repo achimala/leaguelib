@@ -16,15 +16,20 @@
 
 package com.achimala.leaguelib.models;
 
-public enum LeagueMatchmakingQueue {
-    NONE,
-    BOT,
-    BOT_3x3,
-    NORMAL,
-    NORMAL_3x3,
-    ODIN_UNRANKED,
-    RANKED_SOLO_5x5,
-    RANKED_TEAM_3x3,
-    RANKED_TEAM_5x5,
-    ARAM_UNRANKED_5x5
+public enum TeamType {
+    BLUE (100),
+    PURPLE (200);
+
+    private final int teamId;
+    private TeamType(int teamId) {
+	this.teamId = teamId;
+    }
+
+    public static TeamType getFromId(int teamId) {
+	for(TeamType t : TeamType.values()) {
+	    if(t.teamId == teamId)
+		return t;
+	}
+	return null;
+    }
 }
