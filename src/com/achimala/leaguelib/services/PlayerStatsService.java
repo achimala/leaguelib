@@ -38,7 +38,7 @@ public class PlayerStatsService extends LeagueAbstractService {
     }
     
     public void fillRankedStats(LeagueSummoner summoner) throws LeagueException {
-        TypedObject obj = call("getAggregatedStats", new Object[] { summoner.getAccountId(), SUMMONERS_RIFT, LeagueCompetitiveSeason.CURRENT.toString() });
+        TypedObject obj = call("getAggregatedStats", new Object[] { summoner.getAccountId(), SUMMONERS_RIFT, LeagueCompetitiveSeason.CURRENT.getNumber() });
         summoner.setRankedStats(new LeagueSummonerRankedStats(obj.getTO("body")));
     }
     
@@ -92,3 +92,4 @@ public class PlayerStatsService extends LeagueAbstractService {
         });
     }
 }
+

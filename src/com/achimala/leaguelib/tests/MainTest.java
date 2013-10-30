@@ -53,9 +53,8 @@ public class MainTest {
     
     public static void main(String[] args) throws Exception {
         final LeagueConnection c = new LeagueConnection(LeagueServer.NORTH_AMERICA);
-        c.getAccountQueue().addAccount(new LeagueAccount(LeagueServer.NORTH_AMERICA, "3.5.xx", "anshuchimala2", args[0]));
-        c.getAccountQueue().addAccount(new LeagueAccount(LeagueServer.NORTH_AMERICA, "3.5.xx", "anshuchimala3", args[0]));
-        final String SUMMONER_TO_LOOK_UP = "chdmwu";
+        c.getAccountQueue().addAccount(new LeagueAccount(LeagueServer.NORTH_AMERICA, "3.13.xx", "lolteam0debug", args[0]));
+        final String SUMMONER_TO_LOOK_UP = "the breadmaker";
         
         Map<LeagueAccount, LeagueException> exceptions = c.getAccountQueue().connectAll();
         if(exceptions != null) {
@@ -80,8 +79,7 @@ public class MainTest {
                     public void onCompletion(LeagueSummoner summoner) {
                         lock.lock();
                         System.out.println("Profile:");
-                        System.out.println("    S1: " + summoner.getProfileInfo().getSeasonOneTier());
-                        System.out.println("    S2: " + summoner.getProfileInfo().getSeasonTwoTier());
+                        System.out.println("    Prev Highest Tier: " + summoner.getProfileInfo().getPreviousSeasonHighestTier());
                         System.out.println();
                         System.out.flush();
                         decrementCount();
