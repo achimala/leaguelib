@@ -28,6 +28,7 @@ public enum MatchHistoryStatType {
     ITEM3,
     ITEM4,
     ITEM5,
+    ITEM6,
     LARGEST_CRITICAL_STRIKE,
     LARGEST_KILLING_SPREE,
     LARGEST_MULTI_KILL,
