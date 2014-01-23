@@ -19,7 +19,8 @@ package com.achimala.leaguelib.models;
 public enum LeagueCompetitiveSeason {
     ONE(1),
     TWO(2),
-    CURRENT(3);
+	THREE(3),
+    CURRENT(4);
 
     private int _number;
 
